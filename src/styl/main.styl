@@ -1,0 +1,101 @@
+@import './variables.styl'
+@import './helpers/transition.styl'
+@import './helpers/user_select.styl'
+@import './helpers/user_drag.styl'
+@import './Animations.styl'
+
+@font-face {
+  font-family: 'Gotham';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/Gotham.eot');
+  src: local('Gotham'),
+    url('../fonts/gotham.woff2') format('woff2'),
+    url('../fonts/gotham.otf') format('otf'),
+    url('../fonts/Gotham.ttf') format('ttf'),
+    url('../fonts/gotham.woff') format('woff')
+}
+
+
+@font-face {
+  font-family: 'Ano';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/AnoRegular-Regular.eot');
+  src: local('Ano'),
+    url('../fonts/AnoRegular-Regular.woff2') format('woff2'),
+    url('../fonts/AnoRegular-Regular.otf') format('otf'),
+    url('../fonts/AnoRegular-Regular.ttf') format('ttf'),
+    url('../fonts/AnoRegular-Regular.woff') format('woff')
+}
+
+@font-face {
+  font-family: 'Avenir';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/Avenir.eot');
+  src: local('Avenir'),
+    url('../fonts/avenir.woff2') format('woff2'),
+    url('../fonts/Avenir.otf') format('otf'),
+    url('../fonts/avenir.ttf') format('ttf'),
+    url('../fonts/avenir.woff') format('woff')
+}
+
+@font-face {
+  font-family: 'Avenir-Heavy';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/avenir-heavy.eot');
+  src: local('Avenir-Heavy'),
+    url('../fonts/Avenir-Heavy.woff2') format('woff2'),
+    url('../fonts/avenir-heavy.otf') format('otf'),
+    url('../fonts/Avenir-Heavy.ttf') format('ttf'),
+    url('../fonts/Avenir-Heavy.woff') format('woff')
+}
+
+html
+  overflow-x: hidden
+  width: 100%
+  position: absolute
+
+body
+  margin: 0
+  padding: 0
+  overflow-x: hidden
+  position: absolute
+  -webkit-tap-highlight-color: rgba(0 0 0 0)
+
+  #root
+    width: 100vw
+
+  .App
+    width: 100%
+    overflow-x: hidden
+    background: section-color
+
+  h1
+  h2
+  h3
+  h4
+  h5
+  h6
+  p
+  li
+  ul
+  button
+  b
+  label
+  time
+  a
+  header
+    font-family: 'Avenir', sans-serif;
+    font-weight: 100
+    margin: 0
+    padding: 0
+    user-select: none
+    color: #555056
+
+  li
+    list-style: none
+  header
+    padding: 50px

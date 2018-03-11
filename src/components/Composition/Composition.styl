@@ -1,0 +1,32 @@
+.composition
+  width: 50%
+  display: flex
+  flex-direction: column
+  align-items: center
+  padding: 10px
+  box-sizing: border-box
+  height: 100vh
+  main
+    width: 100%
+    .ensemble-tab-bar
+      width: 100%
+      .tab
+        padding: 10px
+        margin: 10px 0
+        border-radius: 5px
+        border: 1px solid #413a48
+      .tab:hover
+        background: #413a48
+      .tab: hover > li
+        color: white
+      .ensemble
+        .track
+          display: flex
+          justify-content: space-between
+          align-items: center
+          .track-cell
+            width: 10px
+            height: 38px
+            background: #413a48
+          .svg-icon:hover
+            fill: grey
