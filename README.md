@@ -5,13 +5,13 @@ A DAW webapp for electronic music producers.
 This app is built with create-react-app, nodejs and the ScribbleTune API.
 
 ## MAC, Linux
->Brew install yarn
->Yarn install
+>Brew install yarn\
+>Yarn install\
 >Yarn start
 
 # Dependencies
->Yarn
->npm
+>Yarn\
+>npm\
 >Brew
 
 
