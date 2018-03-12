@@ -10,15 +10,22 @@
     width: 100%
     .ensemble-tab-bar
       width: 100%
+      .tabs
+        display: flex
       .tab
         padding: 10px
         margin: 10px 0
-        border-radius: 5px
-        border: 1px solid #413a48
+        margin-right: 10px
+        border-radius: 0
+        border-bottom: 5px inset #413a48
+        cursor: pointer
+        transition: 0.25s ease
       .tab:hover
         background: #413a48
-      .tab: hover > li
+      .tab:hover > li
         color: white
+      .selected
+        border-bottom 1px inset #ff9ab1
       .ensemble
         .track
           display: flex

@@ -28,6 +28,7 @@ const Ensemble = props => (
         playTrack={props.playTrack}
         name={track.name}
         trackCells={track.cells}
+        key={i}
       />
     ))}
   </div>
@@ -36,7 +37,11 @@ const Ensemble = props => (
 const Tabs = props => (
   <div class="tabs">
     {props.ensembles.map((ensemble, i) => (
-      <div class="tab">
+      <div
+        onMouseDown={() => props.selectTab(i)}
+        class={`tab ${ensemble.selected ? "selected" : ""}`}
+        key={i}
+      >
         <li>{ensemble.name}</li>
       </div>
     ))}
@@ -45,7 +50,7 @@ const Tabs = props => (
 
 const EnsembleTabBar = props => (
   <div class="ensemble-tab-bar">
-    <Tabs ensembles={props.ensembles} />
+    <Tabs ensembles={props.ensembles} selectTab={props.selectTab} />
     <Ensemble tracks={props.ensembles} playTrack={props.playTrack} />
   </div>
 );
@@ -56,27 +61,51 @@ export default class Composition extends Component {
     this.state = {
       ensembles: [
         {
-          name: "track1",
-          cells: [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+          name: "Track 1",
+          cells: [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+          selected: false
         },
         {
-          name: "track2",
-          cells: [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+          name: "Track 2",
+          cells: [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+          selected: true
+        },
+        {
+          name: "Track 3",
+          cells: [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+          selected: false
         }
       ]
     };
+    this.selectTab = this.selectTab.bind(this);
+    this.playTrack = this.playTrack.bind(this);
   }
   playTrack() {
     console.log("playing");
   }
+  selectTab(i) {
+    this.setState((prevState, props) => {
+      let newEnsembles = prevState.ensembles.map((ensemble, i) => {
+        return {
+          ...ensemble,
+          selected: false
+        };
+      });
+      newEnsembles[i].selected = true;
+      return {
+        ensembles: newEnsembles
+      };
+    });
+  }
   render() {
     return (
-      <div class="composition">
+      <div class="composition" style={{ width: this.props.width }}>
         <header>composition</header>
         <main>
           <EnsembleTabBar
             playTrack={this.playTrack}
             ensembles={this.state.ensembles}
+            selectTab={this.selectTab}
           />
         </main>
       </div>

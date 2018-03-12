@@ -6,7 +6,7 @@ import InstrumentRack from "../InstrumentRack/InstrumentRack";
 export default class Configuration extends Component {
   render() {
     return (
-      <div class="configuration">
+      <div class="configuration" style={{ width: this.props.width }}>
         <header>configuration</header>
         <Sequencer />
         {this.props.instrumentRacks.map((instrumentRacks, i) => (
