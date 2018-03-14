@@ -4,7 +4,7 @@ import SVG from "../svg.js";
 
 const PlayButton = props => (
   <div class="play-button" onMouseDown={props.playTrack}>
-    <SVG name="Play" fill="black" width="60" height="60" />
+    <SVG name="Play" fill="#413a48" width="60" height="60" />
   </div>
 );
 

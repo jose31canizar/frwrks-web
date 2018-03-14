@@ -27,10 +27,35 @@
       .selected
         border-bottom 1px inset #ff9ab1
       .ensemble
+        width: 100%
+        height: 100%
+        //using pseudo elements to animate only using transform and opacity for best possible performance
+        .track::after
+          content: ''
+          z-index: -1
+          position: absolute
+          width: 100%
+          height: 100px
+          opacity: 0
+          border-radius: 5px;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.3)
+          transition: opacity 0.15s ease-in-out
+        .track:hover
+          -webkit-transform: scale(1.2, 1.2)
+          //for safari
+          transform: scale(1, 1)
+          //having the hover here before the pseudo element matters
+        .track:hover::after
+          opacity: 1
         .track
           display: flex
           justify-content: space-between
           align-items: center
+          padding: 10px
+          cursor: pointer
+          transition: transform 0.15s cubic-bezier(0.165, 0.84, 0.44, 1)
+          opacity: 1
+          transform: scale(0.9, 0.9)
           .track-cell
             width: 10px
             height: 38px
