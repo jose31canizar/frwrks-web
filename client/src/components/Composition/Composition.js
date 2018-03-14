@@ -24,7 +24,11 @@ const Track = props => (
 );
 
 const Ensemble = props => (
-  <div class="ensemble">
+  <div
+    class={`ensemble ${
+      props.ensembleIndex === props.selectedEnsembleIndex ? "shown" : "hidden"
+    }`}
+  >
     {props.tracks.map((track, i) => (
       <Track
         playTrack={props.playTrack}
@@ -58,12 +62,15 @@ const Tabs = props => (
 const EnsembleTabBar = props => (
   <div class="ensemble-tab-bar">
     <Tabs ensembles={props.ensembles} selectTab={props.selectTab} />
-    <Ensemble
-      tracks={props.ensembles[props.selectedEnsembleIndex].tracks}
-      playTrack={props.playTrack}
-      selectTrack={props.selectTrack}
-      ensembleIndex={props.selectedEnsembleIndex}
-    />
+    {props.ensembles.map((ensemble, i) => (
+      <Ensemble
+        tracks={ensemble.tracks}
+        playTrack={props.playTrack}
+        selectTrack={props.selectTrack}
+        ensembleIndex={i}
+        selectedEnsembleIndex={props.selectedEnsembleIndex}
+      />
+    ))}
   </div>
 );
 

@@ -29,13 +29,18 @@ export default class Sequencer extends Component {
   }
   componentWillReceiveProps(newProps) {
     if (newProps.playing) {
-      this.play();
+      if (this.state.playing === false) {
+        this.play();
+      }
     } else {
       this.pause();
     }
   }
   pause() {
     window.clearInterval(this.state.intervalID);
+    this.setState({
+      playing: false
+    });
   }
   play() {
     let intervalID = window.setInterval(
@@ -52,6 +57,7 @@ export default class Sequencer extends Component {
       500
     );
     this.setState({
+      playing: true,
       intervalID
     });
   }
