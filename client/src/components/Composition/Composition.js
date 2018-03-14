@@ -1,23 +1,25 @@
 import React, { Component } from "react";
 import "./Composition.styl";
+import TrackSequencer from "../TrackSequencer/TrackSequencer";
 import SVG from "../svg.js";
 
 const PlayButton = props => (
   <div class="play-button" onMouseDown={props.playTrack}>
-    <SVG name="Play" fill="#413a48" width="60" height="60" />
+    {props.icon === "play" ? (
+      <SVG name="Play" fill="#413a48" width="60" height="60" />
+    ) : (
+      <SVG name="Pause" fill="#413a48" width="60" height="60" />
+    )}
   </div>
 );
 
 const Track = props => (
   <div class="track" onMouseDown={props.selectTrack}>
-    <PlayButton playTrack={props.playTrack} />
-    {props.trackCells.map((trackCell, i) => (
-      <div
-        class="track-cell"
-        key={i}
-        style={{ background: trackCell.background }}
-      />
-    ))}
+    <PlayButton
+      icon={props.icon}
+      playTrack={() => props.playTrack(props.ensembleIndex, props.trackIndex)}
+    />
+    <TrackSequencer pattern={props.pattern} playing={props.playing} />
   </div>
 );
 
@@ -26,10 +28,14 @@ const Ensemble = props => (
     {props.tracks.map((track, i) => (
       <Track
         playTrack={props.playTrack}
+        ensembleIndex={props.ensembleIndex}
+        trackIndex={i}
         name={track.name}
-        trackCells={track.cells}
         key={i}
         onMouseDown={props.selectTrack}
+        pattern={track.pattern}
+        playing={track.playing}
+        icon={track.icon}
       />
     ))}
   </div>
@@ -53,9 +59,10 @@ const EnsembleTabBar = props => (
   <div class="ensemble-tab-bar">
     <Tabs ensembles={props.ensembles} selectTab={props.selectTab} />
     <Ensemble
-      tracks={props.ensembles}
+      tracks={props.ensembles[props.selectedEnsembleIndex].tracks}
       playTrack={props.playTrack}
       selectTrack={props.selectTrack}
+      ensembleIndex={props.selectedEnsembleIndex}
     />
   </div>
 );
@@ -70,43 +77,64 @@ export default class Composition extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ensembles: [
-        {
-          name: "Track 1",
-          cells: [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-          selected: false
-        },
-        {
-          name: "Track 2",
-          cells: [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-          selected: true
-        },
-        {
-          name: "Track 3",
-          cells: [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-          selected: false
-        }
-      ]
+      ensembles: this.props.ensembles.map(
+        (ensemble, i) =>
+          i == this.props.selectedEnsembleIndex
+            ? {
+                ...ensemble,
+                //add playing flag to each track for each ensemble
+                tracks: ensemble.tracks.map((track, i) => {
+                  return { ...track, playing: false, icon: "play" };
+                }),
+                selected: true
+              }
+            : {
+                ...ensemble,
+                //add playing flag to each track for each ensemble even
+                //for those not selected
+                tracks: ensemble.tracks.map((track, i) => {
+                  return { ...track, playing: false, icon: "play" };
+                }),
+                selected: false
+              }
+      )
     };
     this.selectTab = this.selectTab.bind(this);
     this.playTrack = this.playTrack.bind(this);
   }
-  playTrack() {
-    console.log("playing");
-  }
-  selectTab(i) {
+  playTrack(ensembleIndex, trackIndex) {
     this.setState((prevState, props) => {
-      let newEnsembles = prevState.ensembles.map((ensemble, i) => {
-        return {
-          ...ensemble,
-          selected: false
-        };
-      });
-      newEnsembles[i].selected = true;
+      let newEnsembles = prevState.ensembles;
+      newEnsembles[ensembleIndex].tracks[trackIndex].playing = !prevState
+        .ensembles[ensembleIndex].tracks[trackIndex].playing;
+      newEnsembles[ensembleIndex].tracks[trackIndex].icon =
+        prevState.ensembles[ensembleIndex].tracks[trackIndex].icon === "play"
+          ? "pause"
+          : "play";
+      console.log(newEnsembles);
       return {
         ensembles: newEnsembles
       };
     });
+  }
+  selectTab(i) {
+    this.setState(
+      (prevState, props) => {
+        let newEnsembles = prevState.ensembles.map((ensemble, i) => {
+          return {
+            ...ensemble,
+            selected: false
+          };
+        });
+        newEnsembles[i].selected = true;
+        return {
+          ensembles: newEnsembles
+        };
+      },
+      () => {
+        this.props.selectEnsemble(i);
+      }
+    );
   }
   render() {
     return (
@@ -116,6 +144,7 @@ export default class Composition extends Component {
           <EnsembleTabBar
             playTrack={this.playTrack}
             ensembles={this.state.ensembles}
+            selectedEnsembleIndex={this.props.selectedEnsembleIndex}
             selectTab={this.selectTab}
             selectTrack={this.props.selectTrack}
           />

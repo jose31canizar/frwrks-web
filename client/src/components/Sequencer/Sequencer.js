@@ -58,15 +58,17 @@ export default class Sequencer extends Component {
   render() {
     return (
       <div class="sequencer">
-        {this.state.shownPattern.map((cell, i) => (
-          <div
-            class="cell"
-            key={i}
-            style={{
-              background: cell === 1 ? "#413a48" : cell == 2 ? "red" : "white"
-            }}
-          />
-        ))}
+        {this.state.shownPattern.map((cell, i) =>
+          React.Children.map(this.props.children, (element, refCell) => {
+            return React.cloneElement(element, {
+              ref: refCell,
+              style: {
+                background:
+                  cell === 1 ? "#413a48" : cell === 2 ? "red" : "white"
+              }
+            });
+          })
+        )}
       </div>
     );
   }

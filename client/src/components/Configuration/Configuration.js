@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./Configuration.styl";
-import Sequencer from "../Sequencer/Sequencer";
+import ConfigurationSequencer from "../ConfigurationSequencer/ConfigurationSequencer";
 import InstrumentRack from "../InstrumentRack/InstrumentRack";
 import SVG from "../svg.js";
 
@@ -46,7 +46,10 @@ export default class Configuration extends Component {
     return (
       <div class="configuration" style={{ width: this.props.width }}>
         <header>configuration</header>
-        <Sequencer pattern={this.state.pattern} playing={this.state.playing} />
+        <ConfigurationSequencer
+          pattern={this.state.pattern}
+          playing={this.state.playing}
+        />
         {this.props.instrumentRacks.map((instrumentRacks, i) => (
           <InstrumentRack key={i} />
         ))}
