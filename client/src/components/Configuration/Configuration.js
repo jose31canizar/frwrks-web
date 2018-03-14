@@ -14,6 +14,12 @@ const PlayButton = props => (
   </div>
 );
 
+/*
+The component where one track is configured.
+On this component, the user creates, edits, and merges instrument racks.
+Merging an instrument rack with another, will combine their patterns,
+but the sound will be replaced with the second instrument selected.
+*/
 export default class Configuration extends Component {
   constructor(props) {
     super(props);

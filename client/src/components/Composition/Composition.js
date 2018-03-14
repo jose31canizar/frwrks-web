@@ -9,7 +9,7 @@ const PlayButton = props => (
 );
 
 const Track = props => (
-  <div class="track">
+  <div class="track" onMouseDown={props.selectTrack}>
     <PlayButton playTrack={props.playTrack} />
     {props.trackCells.map((trackCell, i) => (
       <div
@@ -29,6 +29,7 @@ const Ensemble = props => (
         name={track.name}
         trackCells={track.cells}
         key={i}
+        onMouseDown={props.selectTrack}
       />
     ))}
   </div>
@@ -51,10 +52,20 @@ const Tabs = props => (
 const EnsembleTabBar = props => (
   <div class="ensemble-tab-bar">
     <Tabs ensembles={props.ensembles} selectTab={props.selectTab} />
-    <Ensemble tracks={props.ensembles} playTrack={props.playTrack} />
+    <Ensemble
+      tracks={props.ensembles}
+      playTrack={props.playTrack}
+      selectTrack={props.selectTrack}
+    />
   </div>
 );
 
+/*
+This component is the page that displays all of the ensembles a user has created,
+and the list of tracks associated with that ensemble.
+The user can turn on and off whatever tracks he desires, and they can overlap.
+An ensemble that is playing will continue to play as a user switches to another ensemble.
+*/
 export default class Composition extends Component {
   constructor(props) {
     super(props);
@@ -106,6 +117,7 @@ export default class Composition extends Component {
             playTrack={this.playTrack}
             ensembles={this.state.ensembles}
             selectTab={this.selectTab}
+            selectTrack={this.props.selectTrack}
           />
         </main>
       </div>

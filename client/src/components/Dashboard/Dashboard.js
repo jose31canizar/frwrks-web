@@ -3,6 +3,9 @@ import "./Dashboard.styl";
 import Composition from "../Composition/Composition";
 import Configuration from "../Configuration/Configuration";
 
+/*
+The highest component containing the configuration and composition pages
+*/
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
