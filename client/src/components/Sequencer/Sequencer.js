@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Synthesizer from "../Synthesizer/Synthesizer";
 import "./Sequencer.styl";
 
 /*
@@ -45,15 +46,20 @@ export default class Sequencer extends Component {
   play() {
     let intervalID = window.setInterval(
       () =>
-        this.setState((prevState, props) => {
-          let newMarkerIndex = (prevState.markerIndex + 1) % 16;
-          return {
-            shownPattern: prevState.pattern.map(
-              (beat, i) => (i == newMarkerIndex ? 2 : beat)
-            ),
-            markerIndex: newMarkerIndex
-          };
-        }),
+        this.setState(
+          (prevState, props) => {
+            let newMarkerIndex = (prevState.markerIndex + 1) % 16;
+            return {
+              shownPattern: prevState.pattern.map(
+                (beat, i) => (i == newMarkerIndex ? 2 : beat)
+              ),
+              markerIndex: newMarkerIndex
+            };
+          },
+          () => {
+            this.synthesizer.playC();
+          }
+        ),
       500
     );
     this.setState({
@@ -64,6 +70,7 @@ export default class Sequencer extends Component {
   render() {
     return (
       <div class="sequencer">
+        <Synthesizer onRef={ref => (this.synthesizer = ref)} />
         {this.state.shownPattern.map((cell, i) =>
           React.Children.map(this.props.children, (element, refCell) => {
             return React.cloneElement(element, {
