@@ -83,6 +83,7 @@ export default class Dashboard extends Component {
     };
     this.adjustPaneWidths = this.adjustPaneWidths.bind(this);
     this.selectEnsemble = this.selectEnsemble.bind(this);
+    this.addEnsemble = this.addEnsemble.bind(this);
   }
   componentDidMount() {
     window.addEventListener("resize", () => {
@@ -102,6 +103,34 @@ export default class Dashboard extends Component {
       selectedEnsembleIndex: i
     });
   }
+  addEnsemble() {
+    this.setState((prevState, props) => {
+      const i = prevState.ensembles.length - 1;
+      console.dir(prevState.ensembles);
+      const lastItem = prevState.ensembles[i];
+      let newEnsembles = prevState.ensembles;
+      newEnsembles.push({
+        name: "a",
+        tracks: [
+          {
+            name: "Track 1",
+            pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
+          },
+          {
+            name: "Track 2",
+            pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
+          },
+          {
+            name: "Track 3",
+            pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
+          }
+        ]
+      });
+      return {
+        ensembles: newEnsembles
+      };
+    });
+  }
   render() {
     return (
       <div className="dashboard">
@@ -110,6 +139,7 @@ export default class Dashboard extends Component {
           selectEnsemble={this.selectEnsemble}
           selectedEnsembleIndex={this.state.selectedEnsembleIndex}
           ensembles={this.state.ensembles}
+          addEnsemble={this.addEnsemble}
         />
         <div
           class="divider-container"

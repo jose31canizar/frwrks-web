@@ -6,12 +6,32 @@
   padding: 10px
   box-sizing: border-box
   height: 100vh
+  overflow: hidden
   main
     width: 100%
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    .add-ensemble-button
+      border: 2px solid black
+      border-radius: 5px
+      cursor: pointer
+      height: 100%
+      display: inline-flex
+      padding: 5px
+      transition: 0.15s ease
+      justify-content: flex-end
+    .add-ensemble-button:hover
+      border-color: grey
+      background: grey
+    .add-ensemble-button:hover > svg
+      fill: white
     .ensemble-tab-bar
       width: 100%
       .tabs
         display: flex
+        overflow-x: scroll
       .tab
         padding: 10px
         margin: 10px 0

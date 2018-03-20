@@ -3,6 +3,12 @@ import "./Composition.styl";
 import TrackSequencer from "../TrackSequencer/TrackSequencer";
 import SVG from "../svg.js";
 
+const AddEnsembleButton = props => (
+  <div class="add-ensemble-button" onMouseDown={props.addEnsemble}>
+    <SVG name="Add" fill="#413a48" width="22" height="22" />
+  </div>
+);
+
 const PlayButton = props => (
   <div class="play-button" onMouseDown={props.playTrack}>
     {props.icon === "play" ? (
@@ -74,6 +80,30 @@ const EnsembleTabBar = props => (
   </div>
 );
 
+const ensemblify = (ensembles, selectedEnsembleIndex) => {
+  return ensembles.map(
+    (ensemble, i) =>
+      i == selectedEnsembleIndex
+        ? {
+            ...ensemble,
+            //add playing flag to each track for each ensemble
+            tracks: ensemble.tracks.map((track, i) => {
+              return { ...track, playing: false, icon: "play" };
+            }),
+            selected: true
+          }
+        : {
+            ...ensemble,
+            //add playing flag to each track for each ensemble even
+            //for those not selected
+            tracks: ensemble.tracks.map((track, i) => {
+              return { ...track, playing: false, icon: "play" };
+            }),
+            selected: false
+          }
+  );
+};
+
 /*
 This component is the page that displays all of the ensembles a user has created,
 and the list of tracks associated with that ensemble.
@@ -84,30 +114,18 @@ export default class Composition extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ensembles: this.props.ensembles.map(
-        (ensemble, i) =>
-          i == this.props.selectedEnsembleIndex
-            ? {
-                ...ensemble,
-                //add playing flag to each track for each ensemble
-                tracks: ensemble.tracks.map((track, i) => {
-                  return { ...track, playing: false, icon: "play" };
-                }),
-                selected: true
-              }
-            : {
-                ...ensemble,
-                //add playing flag to each track for each ensemble even
-                //for those not selected
-                tracks: ensemble.tracks.map((track, i) => {
-                  return { ...track, playing: false, icon: "play" };
-                }),
-                selected: false
-              }
+      ensembles: ensemblify(
+        this.props.ensembles,
+        this.props.selectedEnsembleIndex
       )
     };
     this.selectTab = this.selectTab.bind(this);
     this.playTrack = this.playTrack.bind(this);
+  }
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      ensembles: ensemblify(newProps.ensembles, newProps.selectedEnsembleIndex)
+    });
   }
   playTrack(ensembleIndex, trackIndex) {
     this.setState((prevState, props) => {
@@ -148,6 +166,7 @@ export default class Composition extends Component {
       <div class="composition" style={{ width: this.props.width }}>
         <header>composition</header>
         <main>
+          <AddEnsembleButton addEnsemble={this.props.addEnsemble} />
           <EnsembleTabBar
             playTrack={this.playTrack}
             ensembles={this.state.ensembles}
