@@ -8,9 +8,11 @@ This component is the keyboard synthesizer.
 export default class Keyboard extends Component {
   constructor(props) {
     super(props);
+    var synth = Tone.Synth;
+    var polySynth = new Tone.PolySynth(10, synth).toMaster();
 
-    var polySynth = new Tone.PolySynth(10, Tone.Synth).toMaster();
-    polySynth.set("volume", -10);
+    polySynth.set("volume", -5);
+    polySynth.set("detune", 0);
     this.state = {
       polySynth: polySynth,
       keyMap: {}
@@ -52,34 +54,34 @@ export default class Keyboard extends Component {
   playNote(code) {
     switch (code) {
       case 65:
-        this.state.polySynth.triggerAttackRelease(["C4"], "8n");
+        this.state.polySynth.triggerAttackRelease(["C4"], "2n");
         return;
       case 83:
-        this.state.polySynth.triggerAttackRelease(["D4"], "8n");
+        this.state.polySynth.triggerAttackRelease(["E4"], "2n");
         return;
       case 68:
-        this.state.polySynth.triggerAttackRelease(["E4"], "8n");
+        this.state.polySynth.triggerAttackRelease(["G4"], "2n");
         return;
       case 70:
-        this.state.polySynth.triggerAttackRelease(["F4"], "8n");
+        this.state.polySynth.triggerAttackRelease(["F4"], "2n");
         return;
       case 71:
-        this.state.polySynth.triggerAttackRelease(["G4"], "8n");
+        this.state.polySynth.triggerAttackRelease(["A4"], "2n");
         return;
       case 72:
-        this.state.polySynth.triggerAttackRelease(["A5"], "8n");
+        this.state.polySynth.triggerAttackRelease(["C5"], "2n");
         return;
       case 74:
-        this.state.polySynth.triggerAttackRelease(["B5"], "8n");
+        this.state.polySynth.triggerAttackRelease(["D5"], "2n");
         return;
       case 75:
-        this.state.polySynth.triggerAttackRelease(["C5"], "8n");
+        this.state.polySynth.triggerAttackRelease(["F5"], "2n");
         return;
       case 76:
-        this.state.polySynth.triggerAttackRelease(["D5"], "8n");
+        this.state.polySynth.triggerAttackRelease(["C5"], "2n");
         return;
       case 186:
-        this.state.polySynth.triggerAttackRelease(["E5"], "8n");
+        this.state.polySynth.triggerAttackRelease(["E5"], "2n");
         return;
     }
   }

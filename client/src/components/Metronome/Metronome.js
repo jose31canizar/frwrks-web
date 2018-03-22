@@ -7,19 +7,21 @@ This component is the sound producer for the sequencers.
 export default class Metronome extends Component {
   constructor(props) {
     super(props);
+    var synth = new Tone.Synth({
+      oscillator: {
+        type: "pwm",
+        modulationFrequency: 2.2
+      },
+      envelope: {
+        attack: 0.1,
+        decay: 0.4,
+        sustain: 1.0,
+        release: 0.1
+      }
+    }).toMaster();
+    synth.set("volume", -12);
     this.state = {
-      synth: new Tone.Synth({
-        oscillator: {
-          type: "pwm",
-          modulationFrequency: 0.1
-        },
-        envelope: {
-          attack: 0.0,
-          decay: 0,
-          sustain: 0.1,
-          release: 0.05
-        }
-      }).toMaster()
+      synth: synth
     };
     this.playC = this.playC.bind(this);
     this.playD = this.playD.bind(this);

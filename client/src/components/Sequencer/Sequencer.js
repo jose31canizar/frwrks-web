@@ -79,7 +79,7 @@ class Sequencer extends Component {
     this.counterMachine.startCounter(this.props.id);
   }
   increment(marker) {
-    // this.metronome.playC();
+    this.metronome.playC();
     this.setState((prevState, props) => {
       return {
         shownPattern: prevState.pattern.map(

@@ -29,7 +29,7 @@ class CounterMachine extends Component {
     window.clearInterval(this.state.intervalID);
   }
   pauseCounter(id) {
-    // this.props.dispatch(pauseSequencer(id));
+    this.props.dispatch(pauseSequencer(id));
     console.log("pausing counter here");
     this.pauseAllCounters();
   }
@@ -54,7 +54,7 @@ class CounterMachine extends Component {
     let intervalID = window.setInterval(() => {
       console.log(this.state.ids);
       this.props.dispatch(playSequencers(this.state.ids));
-    }, 2000);
+    }, 1000);
     this.setState({ intervalID });
   }
   render() {
