@@ -5,13 +5,8 @@ import App from "./App";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import reducer from "./reducers/";
-import { apiMiddleware } from "./redux";
 
-const store = createStore(
-  reducer,
-  { loggedIn: false },
-  applyMiddleware(apiMiddleware)
-);
+const store = createStore(reducer, {});
 
 ReactDOM.render(
   <Provider store={store}>

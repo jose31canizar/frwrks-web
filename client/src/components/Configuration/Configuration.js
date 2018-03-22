@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./Configuration.styl";
 import ConfigurationSequencer from "../ConfigurationSequencer/ConfigurationSequencer";
 import InstrumentRack from "../InstrumentRack/InstrumentRack";
+import Keyboard from "../Keyboard/Keyboard";
 import SVG from "../svg.js";
 
 const PlayButton = props => (
@@ -49,11 +50,13 @@ export default class Configuration extends Component {
         <ConfigurationSequencer
           pattern={this.state.pattern}
           playing={this.state.playing}
+          id={"config"}
         />
         {this.props.instrumentRacks.map((instrumentRacks, i) => (
           <InstrumentRack key={i} />
         ))}
         <PlayButton onMouseDown={this.togglePlaying} icon={this.state.icon} />
+        <Keyboard onRef={ref => (this.metronome = ref)} />
       </div>
     );
   }

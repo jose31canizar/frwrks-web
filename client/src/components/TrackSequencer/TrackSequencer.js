@@ -10,7 +10,11 @@ Supplies a specific cell type for the UI
 export default class TrackSequencer extends Component {
   render() {
     return (
-      <Sequencer pattern={this.props.pattern} playing={this.props.playing}>
+      <Sequencer
+        pattern={this.props.pattern}
+        playing={this.props.playing}
+        id={this.props.id}
+      >
         <div class="track-cell" />
       </Sequencer>
     );

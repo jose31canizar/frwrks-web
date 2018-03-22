@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./Composition.styl";
 import TrackSequencer from "../TrackSequencer/TrackSequencer";
 import SVG from "../svg.js";
+import { v4 } from "node-uuid";
 
 const AddEnsembleButton = props => (
   <div class="add-ensemble-button" onMouseDown={props.addEnsemble}>
@@ -25,7 +26,11 @@ const Track = props => (
       icon={props.icon}
       playTrack={() => props.playTrack(props.ensembleIndex, props.trackIndex)}
     />
-    <TrackSequencer pattern={props.pattern} playing={props.playing} />
+    <TrackSequencer
+      pattern={props.pattern}
+      playing={props.playing}
+      id={props.id}
+    />
   </div>
 );
 
@@ -42,6 +47,7 @@ const Ensemble = props => (
         trackIndex={i}
         name={track.name}
         key={i}
+        id={i + "0" + props.ensembleIndex}
         onMouseDown={props.selectTrack}
         pattern={track.pattern}
         playing={track.playing}
@@ -70,6 +76,7 @@ const EnsembleTabBar = props => (
     <Tabs ensembles={props.ensembles} selectTab={props.selectTab} />
     {props.ensembles.map((ensemble, i) => (
       <Ensemble
+        key={i}
         tracks={ensemble.tracks}
         playTrack={props.playTrack}
         selectTrack={props.selectTrack}
@@ -121,10 +128,29 @@ export default class Composition extends Component {
     };
     this.selectTab = this.selectTab.bind(this);
     this.playTrack = this.playTrack.bind(this);
+    this.updateNewEnsemble = this.updateNewEnsemble.bind(this);
   }
   componentWillReceiveProps(newProps) {
-    this.setState({
-      ensembles: ensemblify(newProps.ensembles, newProps.selectedEnsembleIndex)
+    if (newProps.ensembles.length > this.state.ensembles.length) {
+      this.updateNewEnsemble(
+        newProps.ensembles,
+        newProps.selectedEnsembleIndex
+      );
+    }
+  }
+  updateNewEnsemble(newEnsembles, selectedEnsembleIndex) {
+    this.setState((prevState, props) => {
+      console.log(newEnsembles);
+      var newEnsemble = newEnsembles[newEnsembles.length - 1];
+      // for (var i in newEnsemble.tracks) {
+      //   newEnsemble.tracks[i].playing = false;
+      //   newEnsemble.tracks[i].icon = "pause";
+      // }
+      return {
+        ensembles: prevState.ensembles.concat(
+          ensemblify([newEnsemble], selectedEnsembleIndex)
+        )
+      };
     });
   }
   playTrack(ensembleIndex, trackIndex) {
@@ -136,7 +162,6 @@ export default class Composition extends Component {
         prevState.ensembles[ensembleIndex].tracks[trackIndex].icon === "play"
           ? "pause"
           : "play";
-      console.log(newEnsembles);
       return {
         ensembles: newEnsembles
       };

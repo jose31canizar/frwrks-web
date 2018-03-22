@@ -5,7 +5,11 @@ import "./ConfigurationSequencer.styl";
 export default class ConfigurationSequencer extends Component {
   render() {
     return (
-      <Sequencer pattern={this.props.pattern} playing={this.props.playing}>
+      <Sequencer
+        pattern={this.props.pattern}
+        playing={this.props.playing}
+        id={this.props.id}
+      >
         <div class="cell" />
       </Sequencer>
     );

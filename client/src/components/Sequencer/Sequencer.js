@@ -1,12 +1,31 @@
 import React, { Component } from "react";
-import Synthesizer from "../Synthesizer/Synthesizer";
+import Metronome from "../Metronome/Metronome";
 import "./Sequencer.styl";
-
+import { connect } from "react-redux";
+import CounterMachine from "../CounterMachine/CounterMachine";
 /*
 This presentational component that displays to the user the beat of the rhythm
 This component is fed a pattern, and a flag telling it whether or not to play
 */
-export default class Sequencer extends Component {
+// @connect(
+//   state => ({
+
+//   }),
+//   dispatch => ({
+
+//   })
+// )
+const mapStateToProps = state => {
+  return { counters: state.counters };
+};
+
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     playSequencer: id => dispatch(playSequencer(id)),
+//     pauseSequencer: id => dispatch(pauseSequencer(id))
+//   };
+// };
+class Sequencer extends Component {
   constructor(props) {
     super(props);
     /*
@@ -26,51 +45,55 @@ export default class Sequencer extends Component {
       playing: false,
       intervalID: null
     };
-    this.play = this.play.bind(this);
+    this.increment = this.increment.bind(this);
+    this.pause = this.pause.bind(this);
+    this.start = this.start.bind(this);
   }
   componentWillReceiveProps(newProps) {
-    if (newProps.playing) {
-      if (this.state.playing === false) {
-        this.play();
-      }
-    } else {
+    //currently not updating higher up playing variable
+    console.log("counters");
+    console.log(newProps.counters);
+    console.log(newProps.counters[this.props.id]);
+    console.log("this.props.id");
+    console.log(this.props.id);
+    if (newProps.playing && this.state.playing) {
+      this.increment(newProps.counters[this.props.id]);
+    } else if (newProps.playing === true && this.state.playing === false) {
+      this.start();
+      console.log("this play()");
+      this.setState({ playing: true });
+    } else if (
+      typeof newProps.counters[this.props.id] === "undefined" ||
+      newProps.counters[this.props.id] === -1
+    ) {
+    } else if (newProps.counters[this.props.id] !== -1) {
+      console.log("this pause()");
       this.pause();
+      this.setState({ playing: false });
     }
   }
   pause() {
-    window.clearInterval(this.state.intervalID);
-    this.setState({
-      playing: false
-    });
+    this.counterMachine.pauseCounter(this.props.id);
   }
-  play() {
-    let intervalID = window.setInterval(
-      () =>
-        this.setState(
-          (prevState, props) => {
-            let newMarkerIndex = (prevState.markerIndex + 1) % 16;
-            return {
-              shownPattern: prevState.pattern.map(
-                (beat, i) => (i == newMarkerIndex ? 2 : beat)
-              ),
-              markerIndex: newMarkerIndex
-            };
-          },
-          () => {
-            this.synthesizer.playC();
-          }
+  start() {
+    this.counterMachine.startCounter(this.props.id);
+  }
+  increment(marker) {
+    // this.metronome.playC();
+    this.setState((prevState, props) => {
+      return {
+        shownPattern: prevState.pattern.map(
+          (beat, i) => (i == marker ? 2 : beat)
         ),
-      500
-    );
-    this.setState({
-      playing: true,
-      intervalID
+        markerIndex: marker
+      };
     });
   }
   render() {
     return (
       <div class="sequencer">
-        <Synthesizer onRef={ref => (this.synthesizer = ref)} />
+        <CounterMachine onRef={ref => (this.counterMachine = ref)} />
+        <Metronome onRef={ref => (this.metronome = ref)} />
         {this.state.shownPattern.map((cell, i) =>
           React.Children.map(this.props.children, (element, refCell) => {
             return React.cloneElement(element, {
@@ -86,3 +109,5 @@ export default class Sequencer extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps)(Sequencer);
