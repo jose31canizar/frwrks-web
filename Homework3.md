@@ -1,0 +1,7 @@
+1. I will create the react native app using create-react-native-app and the UI for both the composition and configuration page with Native Base and react-navigation. I will also make the appropriate data structures, in particular the linked list of filters.
+
+2. I did all the react native set up for the UI so that you can have multiple instruments, tracks, and ensembles. I've used simple component driven development so that the subcomponents of each page are kept modular. I did not do the linked list of filters just yet. Since Javascript actually uses references of objects to build linked lists, I have decided to use an array instead, since in React it isn't as easy to reference components inside of components the way you can do it in vanilla JS. Currently I also have it playing a wave file of the note C when I click on the instrument notes which means I can have a set of pre-recorded wav/mp3 sounds for different types of instruments. I will replace it with actual piano notes. I currently have a skeletal nodejs server in the backend folder.
+
+3. I still have the same plan for the next homework which is to have the server take in as input a string describing the pattern of the rhythm recorded, and outputting the corresponding midi file for that. I will simplify it down to each measure. Still on track.
+
+4. Screenshots: HW3_*.PNG
