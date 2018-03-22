@@ -12,6 +12,7 @@ Currently what I did was I created a bunch of sequencers (basically the componen
 
 
 3. WHAT I HAD PLANNED FOR NEXT DEADLINE
+
 "I will implement the design patterns within the client so that I reuse filter objects and build a factory class for blocks. I will store the state of how many ensembles, tracks, and instrument racks are made using react-redux."
 
 I have actually gotten a head start in implementing redux in my app, so this next step will be a breeze. I will do this on top of accomplishing what I wanted to do with the server. Now that my app has these tracks that play on time together, I need to:
