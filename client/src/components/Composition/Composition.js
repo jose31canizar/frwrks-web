@@ -4,6 +4,8 @@ import TrackSequencer from "../TrackSequencer/TrackSequencer";
 import SVG from "../svg.js";
 import { v4 } from "node-uuid";
 import CounterMachine from "../CounterMachine/CounterMachine";
+import { connect } from "react-redux";
+import { addEnsemble } from "../../actions/ensemble";
 
 const MergeTrackButton = props => (
   <div class="merge-button">
@@ -97,6 +99,10 @@ const EnsembleTabBar = props => (
   </div>
 );
 
+/*
+This function adds the selected flag to each ensemble, and
+adds the playing flag and icon type to each track of each ensemble object
+*/
 const ensemblify = (ensembles, selectedEnsembleIndex) => {
   return ensembles.map(
     (ensemble, i) =>
@@ -127,7 +133,11 @@ and the list of tracks associated with that ensemble.
 The user can turn on and off whatever tracks he desires, and they can overlap.
 An ensemble that is playing will continue to play as a user switches to another ensemble.
 */
-export default class Composition extends Component {
+const mapStateToProps = state => {
+  return { ensembles: state.ensembles };
+};
+
+class Composition extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -139,9 +149,13 @@ export default class Composition extends Component {
     this.selectTab = this.selectTab.bind(this);
     this.playTrack = this.playTrack.bind(this);
     this.updateNewEnsemble = this.updateNewEnsemble.bind(this);
+    this.addEnsemble = this.addEnsemble.bind(this);
   }
   componentWillReceiveProps(newProps) {
-    if (newProps.ensembles.length > this.state.ensembles.length) {
+    console.log("newProps in composition");
+    console.log(newProps);
+    if (typeof newProps.ensembles === "undefined") {
+    } else if (newProps.ensembles.length > this.state.ensembles.length) {
       this.updateNewEnsemble(
         newProps.ensembles,
         newProps.selectedEnsembleIndex
@@ -199,6 +213,10 @@ export default class Composition extends Component {
       counterMachine: this.counterMachine
     });
   }
+  addEnsemble() {
+    console.log("add ensemable");
+    this.props.dispatch(addEnsemble());
+  }
   render() {
     return (
       <div class="composition" style={{ width: this.props.width }}>
@@ -207,7 +225,7 @@ export default class Composition extends Component {
         <main>
           <div class="action-bar">
             <MergeTrackButton />
-            <AddEnsembleButton addEnsemble={this.props.addEnsemble} />
+            <AddEnsembleButton addEnsemble={this.addEnsemble} />
           </div>
           <EnsembleTabBar
             counterMachine={this.counterMachine}
@@ -222,3 +240,5 @@ export default class Composition extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps)(Composition);

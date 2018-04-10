@@ -4,9 +4,10 @@ import App from "./App";
 
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
-import reducer from "./reducers/";
+import sequencerReducer from "./reducers/sequencerReducer";
+// import reducer from "./reducers/";
 
-const store = createStore(reducer, {});
+const store = createStore(sequencerReducer, {});
 
 ReactDOM.render(
   <Provider store={store}>

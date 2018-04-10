@@ -2,11 +2,15 @@ import React, { Component } from "react";
 import "./Dashboard.styl";
 import Composition from "../Composition/Composition";
 import Configuration from "../Configuration/Configuration";
-
+import { connect } from "react-redux";
 /*
 The highest component containing the configuration and composition pages
 */
-export default class Dashboard extends Component {
+const mapStateToProps = state => {
+  return { ensembles: state.ensembles };
+};
+
+class Dashboard extends Component {
   constructor(props) {
     super(props);
     const w = Math.max(document.body.clientWidth, window.innerWidth || 0);
@@ -14,76 +18,10 @@ export default class Dashboard extends Component {
       firstPaneWidth: w / 2,
       fullWidth: w,
       cursor: "pointer",
-      ensembles: [
-        {
-          name: "Ensemble 1",
-          tracks: [
-            {
-              name: "Track 1",
-              pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-            },
-            {
-              name: "Track 2",
-              pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-            },
-            {
-              name: "Track 3",
-              pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-            }
-          ]
-        },
-        {
-          name: "Ensemble 2",
-          tracks: [
-            {
-              name: "Track 1",
-              pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-            },
-            {
-              name: "Track 2",
-              pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-            },
-            {
-              name: "Track 3",
-              pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-            },
-            {
-              name: "Track 4",
-              pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-            }
-          ]
-        },
-        {
-          name: "Ensemble 3",
-          tracks: [
-            {
-              name: "Track 1",
-              pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-            },
-            {
-              name: "Track 2",
-              pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-            },
-            {
-              name: "Track 3",
-              pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-            },
-            {
-              name: "Track 4",
-              pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-            },
-            {
-              name: "Track 5",
-              pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-            }
-          ]
-        }
-      ],
       selectedEnsembleIndex: 0
     };
     this.adjustPaneWidths = this.adjustPaneWidths.bind(this);
     this.selectEnsemble = this.selectEnsemble.bind(this);
-    this.addEnsemble = this.addEnsemble.bind(this);
   }
   componentDidMount() {
     window.addEventListener("resize", () => {
@@ -103,34 +41,6 @@ export default class Dashboard extends Component {
       selectedEnsembleIndex: i
     });
   }
-  addEnsemble() {
-    this.setState((prevState, props) => {
-      const i = prevState.ensembles.length - 1;
-      console.dir(prevState.ensembles);
-      const lastItem = prevState.ensembles[i];
-      let newEnsembles = prevState.ensembles;
-      newEnsembles.push({
-        name: "a",
-        tracks: [
-          {
-            name: "Track 1",
-            pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-          },
-          {
-            name: "Track 2",
-            pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-          },
-          {
-            name: "Track 3",
-            pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
-          }
-        ]
-      });
-      return {
-        ensembles: newEnsembles
-      };
-    });
-  }
   render() {
     return (
       <div className="dashboard">
@@ -138,8 +48,6 @@ export default class Dashboard extends Component {
           width={this.state.firstPaneWidth}
           selectEnsemble={this.selectEnsemble}
           selectedEnsembleIndex={this.state.selectedEnsembleIndex}
-          ensembles={this.state.ensembles}
-          addEnsemble={this.addEnsemble}
         />
         <div
           class="divider-container"
@@ -158,3 +66,6 @@ export default class Dashboard extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps)(Dashboard);
+// export default Dashboard;

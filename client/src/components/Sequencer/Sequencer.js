@@ -57,7 +57,13 @@ class Sequencer extends Component {
       the pausers: tracks that pause, but aren't the last one to pause
       the last pauser
     */
-    if (newProps.counters[this.props.id] === -1 && newProps.playing === false) {
+    if (typeof newProps.counters === "undefined") {
+      console.log("newProps");
+      console.log(newProps);
+    } else if (
+      newProps.counters[this.props.id] === -1 &&
+      newProps.playing === false
+    ) {
       if (this.props.id === "000") {
         console.log("newProps.playing");
         console.log(newProps.playing);
