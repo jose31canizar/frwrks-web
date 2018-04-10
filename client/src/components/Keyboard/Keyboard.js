@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./Keyboard.styl";
 import Tone from "tone";
+import Instrument from "../Instrument/Instrument";
 
 /*
 This component is the keyboard synthesizer.
@@ -13,18 +14,6 @@ export default class Keyboard extends Component {
     //create the synth that creates sound
     var polySynth = new Tone.PolySynth(10, synth).toMaster();
 
-    polySynth.set("oscillator", {
-      type: "sawtooth6",
-      modulationFrequency: 1.2
-    });
-    polySynth.set("envelope", {
-      attack: 0.01,
-      decay: 0.01,
-      sustain: 1.0,
-      release: 0.1
-    });
-    polySynth.set("volume", -11);
-    polySynth.set("detune", 0);
     this.state = {
       polySynth: polySynth,
       //keyMap tracks the current state of what keys are being pressed
@@ -52,6 +41,7 @@ export default class Keyboard extends Component {
     this.releaseNote = this.releaseNote.bind(this);
     this.findNote = this.findNote.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.update = this.update.bind(this);
   }
   componentDidUpdate(prevProps, prevState) {
     prevState.keyMap.map((key, i) => {
@@ -67,12 +57,28 @@ export default class Keyboard extends Component {
   componentWillUnmount() {
     this.props.onRef(undefined);
   }
+  componenentWillReceiveProps(newProps) {
+    console.log("receiving new props");
+    console.log(newProps);
+  }
   componentDidMount() {
     //allow this component to be referenced so that it can call playNote
     this.props.onRef(this);
+
+    this.state.polySynth.set("oscillator", this.instrument.state.oscillator);
+    this.state.polySynth.set("envelope", this.instrument.state.envelope);
+    this.state.polySynth.set("volume", this.instrument.state.volume);
+    this.state.polySynth.set("detune", this.instrument.state.detune);
+
     "keydown keyup"
       .split(" ")
       .map(name => document.addEventListener(name, this.handleKeyPress, false));
+  }
+  update() {
+    this.state.polySynth.set("oscillator", this.instrument.state.oscillator);
+    this.state.polySynth.set("envelope", this.instrument.state.envelope);
+    this.state.polySynth.set("volume", this.instrument.state.volume);
+    this.state.polySynth.set("detune", this.instrument.state.detune);
   }
   handleKeyPress(e) {
     this.setState((prevState, props) => {
@@ -137,12 +143,18 @@ export default class Keyboard extends Component {
   render() {
     return (
       <div class="keyboard">
-        {this.state.keyMap.map((key, i) => (
-          <div>
-            <div class={`key ${key.on ? "pressed" : "unpressed"}`} />
-            <p>{this.findNote(parseInt(key.code))}</p>
-          </div>
-        ))}
+        <Instrument
+          onRef={ref => (this.instrument = ref)}
+          update={this.update}
+        />
+        <div class="keyboard-notes">
+          {this.state.keyMap.map((key, i) => (
+            <div>
+              <div class={`key ${key.on ? "pressed" : "unpressed"}`} />
+              <p>{this.findNote(parseInt(key.code))}</p>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

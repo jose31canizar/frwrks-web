@@ -10,7 +10,7 @@ export default class Metronome extends Component {
     //create synthesizer
     var synth = new Tone.Synth({
       oscillator: {
-        //sine, square, triangle, or sawtooth or pwm
+        //sine, square, triangle, or sawtooth or pwm or custom
         type: "sawtooth",
         modulationFrequency: 1.2,
         partials: [1, 0.2, 0.01]

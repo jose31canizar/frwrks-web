@@ -50,13 +50,6 @@ class Sequencer extends Component {
     this.start = this.start.bind(this);
   }
   componentWillReceiveProps(newProps) {
-    //find whether or not all sequencers have been paused
-
-    if (this.props.id === "000") {
-      console.log("newProps.counterMachine.state.counting");
-      console.log(newProps.counterMachine.state.counting);
-    }
-
     /*
       the kickstarter: the first track to kick off the setinterval
       the starter: any track starting that isn't the kickstarter
@@ -85,14 +78,12 @@ class Sequencer extends Component {
       this.pause();
       this.setState({ playing: false });
 
-      // console.log(this.props.id === "000");
-      // if (this.props.id === "000") {
-      // console.log("paused!!");
-      // }
+      //find whether or not all sequencers have been paused
 
+      //mutate so that the sequencer being paused can be checked for last pauser
       newProps.counters[this.props.id] = -1;
-      // console.log(newProps.counters);
 
+      //variable determining if this is the last pauser
       var allPaused;
 
       if (
@@ -118,7 +109,6 @@ class Sequencer extends Component {
       newProps.counterMachine.state.counting === true &&
       this.state.playing === false
     ) {
-      console.log("joining");
       this.join();
       this.setState({ playing: true });
       //the continuers
@@ -128,10 +118,6 @@ class Sequencer extends Component {
       newProps.counters[this.props.id] !== this.state.marker &&
       this.state.playing === true
     ) {
-      if (this.props.id === "000") {
-        console.log("incrementing....");
-        console.log(newProps.counters);
-      }
       this.increment(newProps.counters[this.props.id]);
     }
   }
