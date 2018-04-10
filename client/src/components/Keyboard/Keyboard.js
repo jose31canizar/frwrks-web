@@ -65,20 +65,23 @@ export default class Keyboard extends Component {
     //allow this component to be referenced so that it can call playNote
     this.props.onRef(this);
 
-    this.state.polySynth.set("oscillator", this.instrument.state.oscillator);
-    this.state.polySynth.set("envelope", this.instrument.state.envelope);
-    this.state.polySynth.set("volume", this.instrument.state.volume);
-    this.state.polySynth.set("detune", this.instrument.state.detune);
+    //loop through all instrument settings and update this keyboard's polysynth accordingly
+    let k;
+    let settings = this.instrument.state;
+    for (k in settings) {
+      this.state.polySynth.set(k, settings[k]);
+    }
 
     "keydown keyup"
       .split(" ")
       .map(name => document.addEventListener(name, this.handleKeyPress, false));
   }
   update() {
-    this.state.polySynth.set("oscillator", this.instrument.state.oscillator);
-    this.state.polySynth.set("envelope", this.instrument.state.envelope);
-    this.state.polySynth.set("volume", this.instrument.state.volume);
-    this.state.polySynth.set("detune", this.instrument.state.detune);
+    let k;
+    let settings = this.instrument.state;
+    for (k in settings) {
+      this.state.polySynth.set(k, settings[k]);
+    }
   }
   handleKeyPress(e) {
     this.setState((prevState, props) => {

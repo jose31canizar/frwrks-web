@@ -25,6 +25,7 @@ export default class Instrument extends Component {
     };
     this.choose80sSynth = this.choose80sSynth.bind(this);
     this.choose70sSynth = this.choose70sSynth.bind(this);
+    this.chooseLightPad = this.chooseLightPad.bind(this);
   }
   choose80sSynth() {
     this.setState(
@@ -34,6 +35,12 @@ export default class Instrument extends Component {
           modulationType: "sawtooth60",
           modulationIndex: 4,
           harmonicity: 3.4
+        },
+        envelope: {
+          attack: 0.01,
+          decay: 0.01,
+          sustain: 1.0,
+          release: 0.1
         }
       },
       () => this.props.update()
@@ -47,6 +54,29 @@ export default class Instrument extends Component {
           modulationType: "sawtooth60",
           modulationIndex: 4,
           harmonicity: 3.4
+        },
+        envelope: {
+          attack: 0.01,
+          decay: 0.01,
+          sustain: 1.0,
+          release: 0.1
+        }
+      },
+      () => this.props.update()
+    );
+  }
+  chooseLightPad() {
+    this.setState(
+      {
+        oscillator: {
+          type: "sine"
+        },
+        envelope: {
+          attack: 0.001,
+          decay: 0.4,
+          sustain: 0.01,
+          release: 1.4,
+          attackCurve: "exponential"
         }
       },
       () => this.props.update()
@@ -68,6 +98,8 @@ export default class Instrument extends Component {
       case "70s synth":
         this.choose70sSynth();
         break;
+      case "light pad":
+        this.chooseLightPad();
       default:
         break;
     }
@@ -76,7 +108,7 @@ export default class Instrument extends Component {
     return (
       <div class="instrument">
         <p>Choose your instrument sound.</p>
-        {["80s synth", "70s synth"].map((option, i) => (
+        {["80s synth", "70s synth", "light pad"].map((option, i) => (
           <p
             class="option"
             onMouseDown={() => this.handleOptionPress(option)}
