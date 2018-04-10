@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import Metronome from "../Metronome/Metronome";
 import "./Sequencer.styl";
 import { connect } from "react-redux";
-import CounterMachine from "../CounterMachine/CounterMachine";
 /*
 This presentational component that displays to the user the beat of the rhythm
 This component is fed a pattern, and a flag telling it whether or not to play
@@ -42,44 +40,116 @@ class Sequencer extends Component {
       pattern: this.props.pattern,
       shownPattern: this.props.pattern,
       markerIndex: 0,
-      playing: false,
-      intervalID: null
+      intervalID: null,
+      playing: false
     };
     this.increment = this.increment.bind(this);
     this.pause = this.pause.bind(this);
+    this.join = this.join.bind(this);
+    this.pauseAll = this.pauseAll.bind(this);
     this.start = this.start.bind(this);
   }
   componentWillReceiveProps(newProps) {
-    //currently not updating higher up playing variable
-    console.log("counters");
-    console.log(newProps.counters);
-    console.log(newProps.counters[this.props.id]);
-    console.log("this.props.id");
-    console.log(this.props.id);
-    if (newProps.playing && this.state.playing) {
-      this.increment(newProps.counters[this.props.id]);
-    } else if (newProps.playing === true && this.state.playing === false) {
-      this.start();
-      console.log("this play()");
-      this.setState({ playing: true });
+    //find whether or not all sequencers have been paused
+
+    if (this.props.id === "000") {
+      console.log("newProps.counterMachine.state.counting");
+      console.log(newProps.counterMachine.state.counting);
+    }
+
+    /*
+      the kickstarter: the first track to kick off the setinterval
+      the starter: any track starting that isn't the kickstarter
+      the continuers: any track that has started and continues to increment
+      the pausers: tracks that pause, but aren't the last one to pause
+      the last pauser
+    */
+    if (newProps.counters[this.props.id] === -1 && newProps.playing === false) {
+      if (this.props.id === "000") {
+        console.log("newProps.playing");
+        console.log(newProps.playing);
+      }
+      //this guard prevents componentWillReceiveProps from looping infinitely because of how redux updates props
+      //the kickstarter case
+      //play button has been played and counter machine hasn't started
     } else if (
-      typeof newProps.counters[this.props.id] === "undefined" ||
-      newProps.counters[this.props.id] === -1
+      newProps.playing === true &&
+      newProps.counterMachine.state.counting === false &&
+      this.state.playing === false
     ) {
-    } else if (newProps.counters[this.props.id] !== -1) {
-      console.log("this pause()");
+      this.start();
+      this.setState({ playing: true });
+      //the pausers
+      //playbutton has been paused and this was previously playing
+    } else if (newProps.playing === false && this.state.playing === true) {
       this.pause();
       this.setState({ playing: false });
+
+      // console.log(this.props.id === "000");
+      // if (this.props.id === "000") {
+      // console.log("paused!!");
+      // }
+
+      newProps.counters[this.props.id] = -1;
+      // console.log(newProps.counters);
+
+      var allPaused;
+
+      if (
+        JSON.stringify(newProps.counters) !== "{}" ||
+        typeof newProps.counters === "undefined"
+      ) {
+        //check if every counter is set to -1 or not using reduce
+        allPaused = !!Object.values(newProps.counters).reduce(function(a, b) {
+          return a === b ? a : NaN;
+        });
+      } else {
+        allPaused = true;
+      }
+
+      if (allPaused) {
+        this.pauseAll();
+      }
+
+      //the starter
+      //play button has been played and counter machine was already counting
+    } else if (
+      newProps.playing === true &&
+      newProps.counterMachine.state.counting === true &&
+      this.state.playing === false
+    ) {
+      console.log("joining");
+      this.join();
+      this.setState({ playing: true });
+      //the continuers
+      //the new marker from the new counters object is different from the old marker (this.state)
+      //and this sequencer was previously playing
+    } else if (
+      newProps.counters[this.props.id] !== this.state.marker &&
+      this.state.playing === true
+    ) {
+      if (this.props.id === "000") {
+        console.log("incrementing....");
+        console.log(newProps.counters);
+      }
+      this.increment(newProps.counters[this.props.id]);
     }
   }
   pause() {
-    this.counterMachine.pauseCounter(this.props.id);
+    if (typeof this.props.counterMachine !== "undefined")
+      this.props.counterMachine.pauseCounter(this.props.id);
   }
   start() {
-    this.counterMachine.startCounter(this.props.id);
+    this.props.counterMachine.startCounter(this.props.id);
+  }
+  join() {
+    this.props.counterMachine.joinCounter(this.props.id);
+  }
+  pauseAll() {
+    if (typeof this.props.counterMachine !== "undefined")
+      this.props.counterMachine.pauseAll();
   }
   increment(marker) {
-    this.metronome.playC();
     this.setState((prevState, props) => {
       return {
         shownPattern: prevState.pattern.map(
@@ -92,8 +162,6 @@ class Sequencer extends Component {
   render() {
     return (
       <div class="sequencer">
-        <CounterMachine onRef={ref => (this.counterMachine = ref)} />
-        <Metronome onRef={ref => (this.metronome = ref)} />
         {this.state.shownPattern.map((cell, i) =>
           React.Children.map(this.props.children, (element, refCell) => {
             return React.cloneElement(element, {

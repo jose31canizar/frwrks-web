@@ -7,24 +7,26 @@ This component is the sound producer for the sequencers.
 export default class Metronome extends Component {
   constructor(props) {
     super(props);
+    //create synthesizer
     var synth = new Tone.Synth({
       oscillator: {
-        type: "pwm",
-        modulationFrequency: 2.2
+        //sine, square, triangle, or sawtooth or pwm
+        type: "sawtooth",
+        modulationFrequency: 1.2,
+        partials: [1, 0.2, 0.01]
       },
       envelope: {
-        attack: 0.1,
-        decay: 0.4,
-        sustain: 1.0,
-        release: 0.1
+        attack: 0.001,
+        decay: 0.005,
+        sustain: 0.09,
+        release: 0.02
       }
     }).toMaster();
-    synth.set("volume", -12);
+    synth.set("volume", -10);
     this.state = {
       synth: synth
     };
-    this.playC = this.playC.bind(this);
-    this.playD = this.playD.bind(this);
+    this.tick = this.tick.bind(this);
   }
   componentDidMount() {
     this.props.onRef(this);
@@ -32,11 +34,9 @@ export default class Metronome extends Component {
   componentWillUnmount() {
     this.props.onRef(undefined);
   }
-  playC() {
+  //output metronome tick sound
+  tick() {
     this.state.synth.triggerAttackRelease("C4", "8n");
-  }
-  playD() {
-    this.state.synth.triggerAttackRelease("D4", "4n");
   }
   render() {
     return <div />;

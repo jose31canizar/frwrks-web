@@ -3,6 +3,13 @@ import "./Composition.styl";
 import TrackSequencer from "../TrackSequencer/TrackSequencer";
 import SVG from "../svg.js";
 import { v4 } from "node-uuid";
+import CounterMachine from "../CounterMachine/CounterMachine";
+
+const MergeTrackButton = props => (
+  <div class="merge-button">
+    <SVG name="Merge" fill="#413a48" width="22" height="22" />
+  </div>
+);
 
 const AddEnsembleButton = props => (
   <div class="add-ensemble-button" onMouseDown={props.addEnsemble}>
@@ -27,6 +34,7 @@ const Track = props => (
       playTrack={() => props.playTrack(props.ensembleIndex, props.trackIndex)}
     />
     <TrackSequencer
+      counterMachine={props.counterMachine}
       pattern={props.pattern}
       playing={props.playing}
       id={props.id}
@@ -42,6 +50,7 @@ const Ensemble = props => (
   >
     {props.tracks.map((track, i) => (
       <Track
+        counterMachine={props.counterMachine}
         playTrack={props.playTrack}
         ensembleIndex={props.ensembleIndex}
         trackIndex={i}
@@ -77,6 +86,7 @@ const EnsembleTabBar = props => (
     {props.ensembles.map((ensemble, i) => (
       <Ensemble
         key={i}
+        counterMachine={props.counterMachine}
         tracks={ensemble.tracks}
         playTrack={props.playTrack}
         selectTrack={props.selectTrack}
@@ -142,10 +152,7 @@ export default class Composition extends Component {
     this.setState((prevState, props) => {
       console.log(newEnsembles);
       var newEnsemble = newEnsembles[newEnsembles.length - 1];
-      // for (var i in newEnsemble.tracks) {
-      //   newEnsemble.tracks[i].playing = false;
-      //   newEnsemble.tracks[i].icon = "pause";
-      // }
+
       return {
         ensembles: prevState.ensembles.concat(
           ensemblify([newEnsemble], selectedEnsembleIndex)
@@ -153,6 +160,7 @@ export default class Composition extends Component {
       };
     });
   }
+  //change track playing state to true or false and play or pause respectively
   playTrack(ensembleIndex, trackIndex) {
     this.setState((prevState, props) => {
       let newEnsembles = prevState.ensembles;
@@ -186,13 +194,23 @@ export default class Composition extends Component {
       }
     );
   }
+  componentDidMount() {
+    this.setState({
+      counterMachine: this.counterMachine
+    });
+  }
   render() {
     return (
       <div class="composition" style={{ width: this.props.width }}>
         <header>composition</header>
+        <CounterMachine onRef={ref => (this.counterMachine = ref)} />
         <main>
-          <AddEnsembleButton addEnsemble={this.props.addEnsemble} />
+          <div class="action-bar">
+            <MergeTrackButton />
+            <AddEnsembleButton addEnsemble={this.props.addEnsemble} />
+          </div>
           <EnsembleTabBar
+            counterMachine={this.counterMachine}
             playTrack={this.playTrack}
             ensembles={this.state.ensembles}
             selectedEnsembleIndex={this.props.selectedEnsembleIndex}

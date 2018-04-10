@@ -4,6 +4,7 @@ import ConfigurationSequencer from "../ConfigurationSequencer/ConfigurationSeque
 import InstrumentRack from "../InstrumentRack/InstrumentRack";
 import Keyboard from "../Keyboard/Keyboard";
 import SVG from "../svg.js";
+import CounterMachine from "../CounterMachine/CounterMachine";
 
 const PlayButton = props => (
   <div class="play-button" onMouseDown={props.onMouseDown}>
@@ -43,11 +44,18 @@ export default class Configuration extends Component {
       };
     });
   }
+  componentDidMount() {
+    this.setState({
+      counterMachine: this.counterMachine
+    });
+  }
   render() {
     return (
       <div class="configuration" style={{ width: this.props.width }}>
         <header>configuration</header>
+        <CounterMachine onRef={ref => (this.counterMachine = ref)} />
         <ConfigurationSequencer
+          counterMachine={this.state.counterMachine}
           pattern={this.state.pattern}
           playing={this.state.playing}
           id={"config"}
@@ -56,7 +64,7 @@ export default class Configuration extends Component {
           <InstrumentRack key={i} />
         ))}
         <PlayButton onMouseDown={this.togglePlaying} icon={this.state.icon} />
-        <Keyboard onRef={ref => (this.metronome = ref)} />
+        <Keyboard onRef={ref => (this.keyboard = ref)} />
       </div>
     );
   }

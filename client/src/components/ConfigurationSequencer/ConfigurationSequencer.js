@@ -6,6 +6,7 @@ export default class ConfigurationSequencer extends Component {
   render() {
     return (
       <Sequencer
+        counterMachine={this.props.counterMachine}
         pattern={this.props.pattern}
         playing={this.props.playing}
         id={this.props.id}

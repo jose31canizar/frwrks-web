@@ -1,7 +1,20 @@
 .keyboard
   display: flex
+  perspective-origin: center
+  perspective: 1000px
   .key
     width: 15px
     height: 40px
-    border: 1px solid black
+    border: 1px solid #413a48
     margin: 10px
+    transition: 0.2s ease
+    transform-origin: top
+  .pressed
+    background: #413a48
+    transform: rotate3d(1, 0, 0, 20deg)
+  .unpressed
+    background: white
+    transform: rotate3d(1, 0, 0, 45deg)
+  p
+    text-align: center
+    font-size: 11px

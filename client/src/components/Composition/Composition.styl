@@ -9,10 +9,26 @@
   overflow: hidden
   main
     width: 100%
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-end;
+    display: flex
+    flex-direction: column
+    justify-content: flex-start
+    align-items: flex-end
+    .action-bar
+      width: 100%
+      height: auto
+      display: flex
+      justify-content: flex-end
+      align-items: center
+    .merge-button
+      border: 2px solid black
+      border-radius: 5px
+      cursor: pointer
+      height: 100%
+      display: inline-flex
+      padding: 5px
+      transition: 0.15s ease
+      justify-content: flex-end
+      margin-right: 10px
     .add-ensemble-button
       border: 2px solid black
       border-radius: 5px
