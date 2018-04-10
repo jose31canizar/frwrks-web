@@ -36,6 +36,8 @@ class Sequencer extends Component {
     cleared when playing is set to false,
     recreated when playing is true again
     */
+    console.log(this.props.id);
+    console.log(this.props.pattern);
     this.state = {
       pattern: this.props.pattern,
       shownPattern: this.props.pattern,
@@ -50,6 +52,17 @@ class Sequencer extends Component {
     this.start = this.start.bind(this);
   }
   componentWillReceiveProps(newProps) {
+    this.setState({
+      pattern: newProps.pattern,
+      shownPattern: newProps.pattern
+    });
+
+    if (this.props.id.toString() === "000") {
+      console.log("newProps.playing");
+      console.log(newProps.playing);
+      console.log(newProps.counters);
+      console.log(newProps.counterMachine.state.counting);
+    }
     /*
       the kickstarter: the first track to kick off the setinterval
       the starter: any track starting that isn't the kickstarter
@@ -64,10 +77,6 @@ class Sequencer extends Component {
       newProps.counters[this.props.id] === -1 &&
       newProps.playing === false
     ) {
-      if (this.props.id === "000") {
-        console.log("newProps.playing");
-        console.log(newProps.playing);
-      }
       //this guard prevents componentWillReceiveProps from looping infinitely because of how redux updates props
       //the kickstarter case
       //play button has been played and counter machine hasn't started

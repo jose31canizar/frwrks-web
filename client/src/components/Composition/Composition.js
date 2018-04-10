@@ -3,9 +3,8 @@ import "./Composition.styl";
 import TrackSequencer from "../TrackSequencer/TrackSequencer";
 import SVG from "../svg.js";
 import { v4 } from "node-uuid";
-import CounterMachine from "../CounterMachine/CounterMachine";
 import { connect } from "react-redux";
-import { addEnsemble } from "../../actions/ensemble";
+import { addEnsemble, selectTrack } from "../../actions/ensemble";
 
 const MergeTrackButton = props => (
   <div class="merge-button">
@@ -30,7 +29,7 @@ const PlayButton = props => (
 );
 
 const Track = props => (
-  <div class="track" onMouseDown={props.selectTrack}>
+  <div class="track" onMouseDown={() => props.selectTrack(props.id)}>
     <PlayButton
       icon={props.icon}
       playTrack={() => props.playTrack(props.ensembleIndex, props.trackIndex)}
@@ -59,7 +58,7 @@ const Ensemble = props => (
         name={track.name}
         key={i}
         id={i + "0" + props.ensembleIndex}
-        onMouseDown={props.selectTrack}
+        selectTrack={props.selectTrack}
         pattern={track.pattern}
         playing={track.playing}
         icon={track.icon}
@@ -208,11 +207,6 @@ class Composition extends Component {
       }
     );
   }
-  componentDidMount() {
-    this.setState({
-      counterMachine: this.counterMachine
-    });
-  }
   addEnsemble() {
     console.log("add ensemable");
     this.props.dispatch(addEnsemble());
@@ -221,19 +215,18 @@ class Composition extends Component {
     return (
       <div class="composition" style={{ width: this.props.width }}>
         <header>composition</header>
-        <CounterMachine onRef={ref => (this.counterMachine = ref)} />
         <main>
           <div class="action-bar">
             <MergeTrackButton />
             <AddEnsembleButton addEnsemble={this.addEnsemble} />
           </div>
           <EnsembleTabBar
-            counterMachine={this.counterMachine}
+            counterMachine={this.props.counterMachine}
             playTrack={this.playTrack}
             ensembles={this.state.ensembles}
             selectedEnsembleIndex={this.props.selectedEnsembleIndex}
             selectTab={this.selectTab}
-            selectTrack={this.props.selectTrack}
+            selectTrack={i => this.props.dispatch(selectTrack(i))}
           />
         </main>
       </div>

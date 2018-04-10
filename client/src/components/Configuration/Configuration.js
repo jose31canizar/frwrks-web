@@ -4,6 +4,7 @@ import ConfigurationSequencer from "../ConfigurationSequencer/ConfigurationSeque
 import InstrumentRack from "../InstrumentRack/InstrumentRack";
 import Keyboard from "../Keyboard/Keyboard";
 import SVG from "../svg.js";
+import { connect } from "react-redux";
 import CounterMachine from "../CounterMachine/CounterMachine";
 
 const PlayButton = props => (
@@ -22,10 +23,20 @@ On this component, the user creates, edits, and merges instrument racks.
 Merging an instrument rack with another, will combine their patterns,
 but the sound will be replaced with the second instrument selected.
 */
-export default class Configuration extends Component {
+const mapStateToProps = state => {
+  return {
+    selectedTrack: state.selectedTrack,
+    selectedEnsembleName: state.selectedEnsembleName,
+    selectedTrackID: state.selectedTrackID,
+    playing: state.playing
+  };
+};
+
+class Configuration extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedTrack: this.props.selectedTrack,
       pattern: Array(16)
         .fill(0)
         .fill(1, 2, 4)
@@ -44,6 +55,10 @@ export default class Configuration extends Component {
       };
     });
   }
+  componentWillReceiveProps(newProps) {
+    console.log("this.props.selectedTrackID");
+    console.log(this.props.selectedTrackID);
+  }
   componentDidMount() {
     this.setState({
       counterMachine: this.counterMachine
@@ -53,12 +68,15 @@ export default class Configuration extends Component {
     return (
       <div class="configuration" style={{ width: this.props.width }}>
         <header>configuration</header>
-        <CounterMachine onRef={ref => (this.counterMachine = ref)} />
+        <div class="info">
+          <p>{this.props.selectedEnsembleName}</p>
+          <p>{this.state.selectedTrack.name}</p>
+        </div>
         <ConfigurationSequencer
-          counterMachine={this.state.counterMachine}
-          pattern={this.state.pattern}
-          playing={this.state.playing}
-          id={"config"}
+          counterMachine={this.props.counterMachine}
+          pattern={this.props.selectedTrack.pattern}
+          playing={this.props.playing}
+          id={this.props.selectedTrackID}
         />
         {this.props.instrumentRacks.map((instrumentRacks, i) => (
           <InstrumentRack key={i} />
@@ -69,3 +87,5 @@ export default class Configuration extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps)(Configuration);

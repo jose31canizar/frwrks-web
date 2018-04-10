@@ -3,6 +3,7 @@ import "./Dashboard.styl";
 import Composition from "../Composition/Composition";
 import Configuration from "../Configuration/Configuration";
 import { connect } from "react-redux";
+import CounterMachine from "../CounterMachine/CounterMachine";
 /*
 The highest component containing the configuration and composition pages
 */
@@ -35,10 +36,14 @@ class Dashboard extends Component {
       firstPaneWidth: e.clientX
     });
   }
-  selectTrack(i) {}
   selectEnsemble(i) {
     this.setState({
       selectedEnsembleIndex: i
+    });
+  }
+  componentDidMount() {
+    this.setState({
+      counterMachine: this.counterMachine
     });
   }
   render() {
@@ -48,7 +53,9 @@ class Dashboard extends Component {
           width={this.state.firstPaneWidth}
           selectEnsemble={this.selectEnsemble}
           selectedEnsembleIndex={this.state.selectedEnsembleIndex}
+          counterMachine={this.state.counterMachine}
         />
+        <CounterMachine onRef={ref => (this.counterMachine = ref)} />
         <div
           class="divider-container"
           onDrag={e => this.adjustPaneWidths(e)}
@@ -59,6 +66,7 @@ class Dashboard extends Component {
           <div class="divider" style={{ cursor: this.state.cursor }} />
         </div>
         <Configuration
+          counterMachine={this.state.counterMachine}
           instrumentRacks={this.props.instrumentRacks}
           width={this.state.fullWidth - this.state.firstPaneWidth}
         />
