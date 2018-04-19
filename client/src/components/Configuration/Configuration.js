@@ -6,6 +6,7 @@ import Keyboard from "../Keyboard/Keyboard";
 import SVG from "../svg.js";
 import { connect } from "react-redux";
 import CounterMachine from "../CounterMachine/CounterMachine";
+import { recordNote } from "../../actions/configuration";
 
 const PlayButton = props => (
   <div class="play-button" onMouseDown={props.onMouseDown}>
@@ -32,16 +33,17 @@ const mapStateToProps = state => {
   };
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+    recordNote: (i, id) => dispatch(recordNote(i, id))
+  };
+};
+
 class Configuration extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedTrack: this.props.selectedTrack,
-      pattern: Array(16)
-        .fill(0)
-        .fill(1, 2, 4)
-        .fill(1, 8, 10)
-        .fill(1, 12, 14),
       playing: false,
       icon: "play"
     };
@@ -77,15 +79,24 @@ class Configuration extends Component {
           pattern={this.props.selectedTrack.pattern}
           playing={this.props.playing}
           id={this.props.selectedTrackID}
+          onRef={ref => (this.configurationSequencer = ref)}
         />
         {this.props.instrumentRacks.map((instrumentRacks, i) => (
           <InstrumentRack key={i} />
         ))}
         <PlayButton onMouseDown={this.togglePlaying} icon={this.state.icon} />
-        <Keyboard onRef={ref => (this.keyboard = ref)} />
+        <Keyboard
+          onRef={ref => (this.keyboard = ref)}
+          recordNote={() =>
+            this.props.recordNote(
+              this.configurationSequencer.getMarkerIndex(),
+              this.props.selectedTrackID
+            )
+          }
+        />
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps)(Configuration);
+export default connect(mapStateToProps, mapDispatchToProps)(Configuration);

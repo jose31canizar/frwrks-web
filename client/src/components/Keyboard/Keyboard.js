@@ -48,6 +48,7 @@ export default class Keyboard extends Component {
       if (key.on == false && this.state.keyMap[i].on == true) {
         console.log("key pressed");
         this.playNote(this.findNote(parseInt(key.code)));
+        this.props.recordNote();
       } else if (key.on == true && this.state.keyMap[i].on == false) {
         console.log("key released");
         this.releaseNote(this.findNote(parseInt(key.code)));

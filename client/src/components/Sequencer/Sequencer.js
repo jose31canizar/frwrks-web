@@ -50,6 +50,16 @@ class Sequencer extends Component {
     this.join = this.join.bind(this);
     this.pauseAll = this.pauseAll.bind(this);
     this.start = this.start.bind(this);
+    this.getMarkerIndex = this.getMarkerIndex.bind(this);
+  }
+  getMarkerIndex() {
+    return this.state.markerIndex;
+  }
+  componentWillUnmount() {
+    this.props.onRef(undefined);
+  }
+  componentDidMount() {
+    this.props.onRef(this);
   }
   componentWillReceiveProps(newProps) {
     this.setState({

@@ -15,6 +15,7 @@ export default class TrackSequencer extends Component {
         pattern={this.props.pattern}
         playing={this.props.playing}
         id={this.props.id}
+        onRef={this.props.onRef}
       >
         <div class="track-cell" />
       </Sequencer>

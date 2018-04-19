@@ -22,7 +22,19 @@ class Dashboard extends Component {
       selectedEnsembleIndex: 0
     };
     this.adjustPaneWidths = this.adjustPaneWidths.bind(this);
-    this.selectEnsemble = this.selectEnsemble.bind(this);
+  }
+  componentWillReceiveProps(newProps) {
+    let index = -1;
+    for (let i = 0; i < newProps.ensembles.length; i += 1) {
+      if (newProps.ensembles[i].selected) {
+        index = i;
+      }
+    }
+    console.log("new props in dashboard");
+    console.log(index);
+    this.setState({
+      selectedEnsembleIndex: index
+    });
   }
   componentDidMount() {
     window.addEventListener("resize", () => {
@@ -34,11 +46,6 @@ class Dashboard extends Component {
     console.log(e.clientX);
     this.setState({
       firstPaneWidth: e.clientX
-    });
-  }
-  selectEnsemble(i) {
-    this.setState({
-      selectedEnsembleIndex: i
     });
   }
   componentDidMount() {
