@@ -30,8 +30,6 @@ class Dashboard extends Component {
         index = i;
       }
     }
-    console.log("new props in dashboard");
-    console.log(index);
     this.setState({
       selectedEnsembleIndex: index
     });

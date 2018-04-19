@@ -57,12 +57,6 @@ const Ensemble = props => (
       props.ensembleIndex === props.selectedEnsembleIndex ? "shown" : "hidden"
     }`}
   >
-    {console.log(props.selectedEnsembleIndex)}
-    {console.log(props.ensembleIndex)}
-    {console.log("props.ensembleIndex")}
-    {console.log(
-      props.ensembleIndex === props.selectedEnsembleIndex ? "shown" : "hidden"
-    )}
     {props.tracks.map((track, i) => (
       <Track
         counterMachine={props.counterMachine}
@@ -83,8 +77,6 @@ const Ensemble = props => (
 
 const Tabs = props => (
   <div class="tabs">
-    {console.log("props.ensembles in tabs")}
-    {console.log(props.ensembles)}
     {props.ensembles.map((ensemble, i) => (
       <div
         onMouseDown={() => props.selectTab(i)}
@@ -128,7 +120,8 @@ const mapDispatchToProps = dispatch => {
   return {
     selectTab: i => dispatch(selectTab(i)),
     toggleTrack: (ei, ti) => dispatch(toggleTrack(ei, ti)),
-    selectTrack: i => dispatch(selectTrack(i))
+    selectTrack: i => dispatch(selectTrack(i)),
+    addEnsemble: () => dispatch(addEnsemble())
   };
 };
 
@@ -143,9 +136,7 @@ class Composition extends Component {
         <main>
           <div class="action-bar">
             <MergeTrackButton />
-            <AddEnsembleButton
-              addEnsemble={() => this.props.dispatch(addEnsemble())}
-            />
+            <AddEnsembleButton addEnsemble={() => this.props.addEnsemble()} />
           </div>
           <EnsembleTabBar
             counterMachine={this.props.counterMachine}

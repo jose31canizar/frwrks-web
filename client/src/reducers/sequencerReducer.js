@@ -227,15 +227,21 @@ const reducer = (state = defaultState, action) => {
             tracks: [
               {
                 name: "Track 1",
-                pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
+                pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+                playing: false,
+                icon: "play"
               },
               {
                 name: "Track 2",
-                pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
+                pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+                playing: false,
+                icon: "play"
               },
               {
                 name: "Track 3",
-                pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0]
+                pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+                playing: false,
+                icon: "play"
               }
             ]
           }
