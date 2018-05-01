@@ -6,7 +6,7 @@ const defaultState = {
   //not whether a specific track is playing or not
   selectedTrack: {
     name: "Track 1",
-    pattern: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    pattern: [...new Array(32)].map(x => ["blank"])
   },
   selectedEnsembleName: "Ensemble 1",
   ensembles: [
@@ -16,19 +16,19 @@ const defaultState = {
       tracks: [
         {
           name: "Track 1",
-          pattern: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          pattern: [...new Array(32)].map(x => ["blank"]),
           playing: false,
           icon: "play"
         },
         {
           name: "Track 2",
-          pattern: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+          pattern: [...new Array(32)].map(x => ["blank"]),
           playing: false,
           icon: "play"
         },
         {
           name: "Track 3",
-          pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+          pattern: [...new Array(32)].map(x => ["blank"]),
           playing: false,
           icon: "play"
         }
@@ -40,61 +40,25 @@ const defaultState = {
       tracks: [
         {
           name: "Track 1",
-          pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+          pattern: [...new Array(32)].map(x => ["blank"]),
           playing: false,
           icon: "play"
         },
         {
           name: "Track 2",
-          pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+          pattern: [...new Array(32)].map(x => ["blank"]),
           playing: false,
           icon: "play"
         },
         {
           name: "Track 3",
-          pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+          pattern: [...new Array(32)].map(x => ["blank"]),
           playing: false,
           icon: "play"
         },
         {
           name: "Track 4",
-          pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
-          playing: false,
-          icon: "play"
-        }
-      ]
-    },
-    {
-      name: "Ensemble 3",
-      selected: false,
-      tracks: [
-        {
-          name: "Track 1",
-          pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
-          playing: false,
-          icon: "play"
-        },
-        {
-          name: "Track 2",
-          pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
-          playing: false,
-          icon: "play"
-        },
-        {
-          name: "Track 3",
-          pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
-          playing: false,
-          icon: "play"
-        },
-        {
-          name: "Track 4",
-          pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
-          playing: false,
-          icon: "play"
-        },
-        {
-          name: "Track 5",
-          pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+          pattern: [...new Array(32)].map(x => ["blank"]),
           playing: false,
           icon: "play"
         }
@@ -165,6 +129,12 @@ const reducer = (state = defaultState, action) => {
       let ei = parseInt(action.id[2]);
       let tj = parseInt(action.id[0]);
 
+      console.log("notes played");
+      console.log(action.notesPlayed);
+      console.log(action.notesPlayed.length);
+      let notesPlayed =
+        action.notesPlayed.length === 0 ? ["blank"] : action.notesPlayed;
+
       let newEnsembles = state.ensembles.map(
         (ensemble, i) =>
           i === ei
@@ -176,7 +146,7 @@ const reducer = (state = defaultState, action) => {
                       ? {
                           ...track,
                           pattern: track.pattern.map(
-                            (n, i) => (i === action.i ? 1 : n)
+                            (n, i) => (i === action.i ? notesPlayed : n)
                           )
                         }
                       : track
@@ -195,7 +165,7 @@ const reducer = (state = defaultState, action) => {
         selectedTrack: {
           ...state.selectedTrack,
           pattern: state.selectedTrack.pattern.map(
-            (n, i) => (i === action.i ? 1 : n)
+            (n, i) => (i === action.i ? notesPlayed : n)
           )
         },
         ensembles: newEnsembles
@@ -227,19 +197,19 @@ const reducer = (state = defaultState, action) => {
             tracks: [
               {
                 name: "Track 1",
-                pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+                pattern: [...new Array(32)].map(x => ["blank"]),
                 playing: false,
                 icon: "play"
               },
               {
                 name: "Track 2",
-                pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+                pattern: [...new Array(32)].map(x => ["blank"]),
                 playing: false,
                 icon: "play"
               },
               {
                 name: "Track 3",
-                pattern: [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+                pattern: [...new Array(32)].map(x => ["blank"]),
                 playing: false,
                 icon: "play"
               }
@@ -290,7 +260,7 @@ const reducer = (state = defaultState, action) => {
               typeof state.counters[id] !== "undefined" &&
               state.counters[id] !== -1
             ) {
-              obj[id] = (state.counters[id] + 1) % 16;
+              obj[id] = (state.counters[id] + 1) % 32;
             } else {
               obj[id] = -1;
             }

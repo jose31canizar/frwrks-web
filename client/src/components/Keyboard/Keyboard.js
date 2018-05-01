@@ -16,6 +16,7 @@ export default class Keyboard extends Component {
 
     this.state = {
       polySynth: polySynth,
+      octave: 0,
       //keyMap tracks the current state of what keys are being pressed
       keyMap: [
         { code: "65", on: false },
@@ -34,22 +35,41 @@ export default class Keyboard extends Component {
         { code: "79", on: false }, //black
         { code: "76", on: false },
         { code: "80", on: false }, //black
-        { code: "186", on: false }
+        { code: "186", on: false },
+        { code: "88", on: false },
+        { code: "90", on: false }
       ]
     };
     this.playNote = this.playNote.bind(this);
+    this.playNotes = this.playNotes.bind(this);
     this.releaseNote = this.releaseNote.bind(this);
     this.findNote = this.findNote.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.update = this.update.bind(this);
+    this.increaseOctave = this.increaseOctave.bind(this);
+    this.decreaseOctave = this.decreaseOctave.bind(this);
   }
-  componentDidUpdate(prevProps, prevState) {
-    prevState.keyMap.map((key, i) => {
-      if (key.on == false && this.state.keyMap[i].on == true) {
-        console.log("key pressed");
-        this.playNote(this.findNote(parseInt(key.code)));
-        this.props.recordNote();
-      } else if (key.on == true && this.state.keyMap[i].on == false) {
+  playNotes(oldMap, newMap) {
+    console.log("prevState.keyMap");
+    console.log(newMap);
+
+    newMap.map((key, i) => {
+      // console.log(key);
+      // console.log(key.on);
+      console.log(key.code);
+      console.log("key.code");
+      // console.log(key.on);
+      // console.log(newMap[i].on);
+      // console.log(oldMap[i].on);
+      if (oldMap[i].on === false && newMap[i].on === true) {
+        if (key.code == 90) {
+          this.decreaseOctave();
+        } else if (key.code == 88) {
+          this.increaseOctave();
+        } else {
+          this.playNote(this.findNote(parseInt(key.code)));
+        }
+      } else if (oldMap[i].on === true && newMap[i].on === false) {
         console.log("key released");
         this.releaseNote(this.findNote(parseInt(key.code)));
       }
@@ -85,21 +105,34 @@ export default class Keyboard extends Component {
     }
   }
   handleKeyPress(e) {
-    this.setState((prevState, props) => {
-      let newMap = prevState.keyMap.map(
-        (key, i) =>
-          key.code === e.keyCode.toString()
-            ? { ...key, on: e.type === "keydown" }
-            : key
-      );
-      // console.log(newMap);
-      return {
-        keyMap: newMap
-      };
-    });
+    this.setState(
+      (prevState, props) => {
+        let newMap = prevState.keyMap.map(
+          (key, i) =>
+            key.code === e.keyCode.toString()
+              ? { ...key, on: e.type === "keydown" }
+              : key
+        );
+
+        this.playNotes(this.state.keyMap, newMap);
+
+        return {
+          keyMap: newMap
+        };
+      },
+      () => {
+        let notesArray = this.state.keyMap
+          .filter(note => note.on)
+          .map(note => note.code)
+          .map(code => this.findNote(parseInt(code)));
+        this.props.recordNote(notesArray);
+      }
+    );
   }
   //output audio for this note
   playNote(note) {
+    console.log("play this note");
+    console.log(note);
     this.state.polySynth.triggerAttack([note]);
   }
   releaseNote(note) {
@@ -107,42 +140,55 @@ export default class Keyboard extends Component {
     this.state.polySynth.triggerRelease([note]);
   }
   findNote(code) {
+    const { octave } = this.state;
     switch (code) {
       case 65:
-        return "C4";
+        return "C" + (octave + 4);
       case 87:
-        return "C#4";
+        return "C#" + (octave + 4);
       case 83:
-        return "D4";
+        return "D" + (octave + 4);
       case 69:
-        return "D#4";
+        return "D#" + (octave + 4);
       case 68:
-        return "E4";
+        return "E" + (octave + 4);
       case 70:
-        return "F4";
+        return "F" + (octave + 4);
       case 84:
-        return "F#4";
+        return "F#" + (octave + 4);
       case 71:
-        return "G4";
+        return "G" + (octave + 4);
       case 89:
-        return "G#4";
+        return "G#" + (octave + 4);
       case 72:
-        return "A4";
+        return "A" + (octave + 4);
       case 85:
-        return "A#4";
+        return "A#" + (octave + 4);
       case 74:
-        return "B4";
+        return "B" + (octave + 4);
       case 75:
-        return "C5";
+        return "C" + (octave + 5);
       case 79:
-        return "C#5";
+        return "C#" + (octave + 5);
       case 76:
-        return "D5";
+        return "D" + (octave + 5);
       case 80:
-        return "D#5";
+        return "D#" + (octave + 5);
       case 186:
-        return "E5";
+        return "E" + (octave + 5);
     }
+  }
+  increaseOctave() {
+    // console.log("increasing octave");
+    this.setState((prevState, props) => {
+      return { octave: prevState.octave + 1 };
+    });
+  }
+  decreaseOctave() {
+    console.log("decreasing");
+    this.setState((prevState, props) => {
+      return { octave: prevState.octave - 1 };
+    });
   }
   render() {
     return (

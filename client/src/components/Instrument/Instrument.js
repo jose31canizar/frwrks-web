@@ -1,6 +1,77 @@
 import React, { Component } from "react";
 import "./Instrument.styl";
 
+const instruments = {
+  "70s synth": {
+    oscillator: {
+      type: "square8",
+      modulationType: "sawtooth60",
+      modulationIndex: 4,
+      harmonicity: 3.4
+    },
+    envelope: {
+      attack: 0.01,
+      decay: 0.01,
+      sustain: 1.0,
+      release: 0.1
+    }
+  },
+  "light pad": {
+    oscillator: {
+      type: "sine"
+    },
+    envelope: {
+      attack: 0.001,
+      decay: 0.4,
+      sustain: 0.01,
+      release: 1.4,
+      attackCurve: "exponential"
+    }
+  },
+  "80s synth": {
+    oscillator: {
+      type: "fatsawtooth4",
+      modulationType: "sawtooth60",
+      modulationIndex: 4,
+      harmonicity: 3.4
+    },
+    envelope: {
+      attack: 0.01,
+      decay: 0.01,
+      sustain: 1.0,
+      release: 0.1
+    }
+  },
+  "Wavy Synth": {
+    oscillator: {
+      type: "fatsawtooth8",
+      modulationType: "sawtooth20",
+      modulationIndex: 8,
+      harmonicity: 3.4
+    },
+    envelope: {
+      attack: 0.01,
+      decay: 0.01,
+      sustain: 1.0,
+      release: 0.1
+    }
+  },
+  Kick: {
+    oscillator: {
+      type: "sine2",
+      modulationType: "sine2",
+      modulationIndex: 1,
+      harmonicity: 1.4
+    },
+    envelope: {
+      attack: 0.0,
+      decay: 0.2,
+      sustain: 1.0,
+      release: 0.05
+    }
+  }
+};
+
 export default class Instrument extends Component {
   constructor(props) {
     super(props);
@@ -23,64 +94,7 @@ export default class Instrument extends Component {
       volume: -11,
       detune: 0
     };
-    this.choose80sSynth = this.choose80sSynth.bind(this);
-    this.choose70sSynth = this.choose70sSynth.bind(this);
-    this.chooseLightPad = this.chooseLightPad.bind(this);
-  }
-  choose80sSynth() {
-    this.setState(
-      {
-        oscillator: {
-          type: "fatsawtooth4",
-          modulationType: "sawtooth60",
-          modulationIndex: 4,
-          harmonicity: 3.4
-        },
-        envelope: {
-          attack: 0.01,
-          decay: 0.01,
-          sustain: 1.0,
-          release: 0.1
-        }
-      },
-      () => this.props.update()
-    );
-  }
-  choose70sSynth() {
-    this.setState(
-      {
-        oscillator: {
-          type: "square4",
-          modulationType: "sawtooth60",
-          modulationIndex: 4,
-          harmonicity: 3.4
-        },
-        envelope: {
-          attack: 0.01,
-          decay: 0.01,
-          sustain: 1.0,
-          release: 0.1
-        }
-      },
-      () => this.props.update()
-    );
-  }
-  chooseLightPad() {
-    this.setState(
-      {
-        oscillator: {
-          type: "sine"
-        },
-        envelope: {
-          attack: 0.001,
-          decay: 0.4,
-          sustain: 0.01,
-          release: 1.4,
-          attackCurve: "exponential"
-        }
-      },
-      () => this.props.update()
-    );
+    this.handleOptionPress = this.handleOptionPress.bind(this);
   }
   componentWillUnmount() {
     this.props.onRef(undefined);
@@ -90,25 +104,22 @@ export default class Instrument extends Component {
     this.props.onRef(this);
   }
   handleOptionPress(option) {
-    this.setState({ chosenInstrument: option });
-    switch (option) {
-      case "80s synth":
-        this.choose80sSynth();
-        break;
-      case "70s synth":
-        this.choose70sSynth();
-        break;
-      case "light pad":
-        this.chooseLightPad();
-      default:
-        break;
-    }
+    console.log(option);
+    console.log(instruments[option]);
+    this.setState(
+      {
+        chosenInstrument: option,
+        envelope: instruments[option].envelope,
+        oscillator: instruments[option].oscillator
+      },
+      () => this.props.update()
+    );
   }
   render() {
     return (
       <div class="instrument">
         <p>Choose your instrument sound.</p>
-        {["80s synth", "70s synth", "light pad"].map((option, i) => (
+        {Object.keys(instruments).map((option, i) => (
           <p
             class="option"
             onMouseDown={() => this.handleOptionPress(option)}

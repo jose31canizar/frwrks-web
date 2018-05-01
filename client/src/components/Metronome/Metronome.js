@@ -16,10 +16,10 @@ export default class Metronome extends Component {
         partials: [1, 0.2, 0.01]
       },
       envelope: {
-        attack: 0.001,
-        decay: 0.005,
-        sustain: 0.09,
-        release: 0.02
+        attack: 0.01,
+        decay: 0.01,
+        sustain: 0.02,
+        release: 0.01
       }
     }).toMaster();
     synth.set("volume", -10);

@@ -1,5 +1,5 @@
-export const recordNote = (i, id) => {
-  return { type: "RECORD_NOTE", i: i, id: id };
+export const recordNote = (i, notesPlayed, id) => {
+  return { type: "RECORD_NOTE", i: i, notesPlayed: notesPlayed, id: id };
 };
 
 const API = "http://localhost:3001";

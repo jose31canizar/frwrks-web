@@ -35,7 +35,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    recordNote: (i, id) => dispatch(recordNote(i, id))
+    recordNote: (i, notesPlayed, id) => dispatch(recordNote(i, notesPlayed, id))
   };
 };
 
@@ -60,6 +60,7 @@ class Configuration extends Component {
   componentWillReceiveProps(newProps) {
     console.log("this.props.selectedTrackID");
     console.log(this.props.selectedTrackID);
+    console.log(this.props.selectedTrack);
   }
   componentDidMount() {
     this.setState({
@@ -87,9 +88,10 @@ class Configuration extends Component {
         <PlayButton onMouseDown={this.togglePlaying} icon={this.state.icon} />
         <Keyboard
           onRef={ref => (this.keyboard = ref)}
-          recordNote={() =>
+          recordNote={notesPlayed =>
             this.props.recordNote(
               this.configurationSequencer.getMarkerIndex(),
+              notesPlayed,
               this.props.selectedTrackID
             )
           }

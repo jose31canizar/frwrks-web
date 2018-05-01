@@ -138,6 +138,8 @@ class Composition extends Component {
             <MergeTrackButton />
             <AddEnsembleButton addEnsemble={() => this.props.addEnsemble()} />
           </div>
+          {console.log("new ensemble in composition")}
+          {console.log(this.props.ensembles)}
           <EnsembleTabBar
             counterMachine={this.props.counterMachine}
             toggleTrack={this.props.toggleTrack}

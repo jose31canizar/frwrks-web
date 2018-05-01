@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./Sequencer.styl";
 import { connect } from "react-redux";
+import Output from "../Output/Output";
 /*
 This presentational component that displays to the user the beat of the rhythm
 This component is fed a pattern, and a flag telling it whether or not to play
@@ -40,7 +41,9 @@ class Sequencer extends Component {
     console.log(this.props.pattern);
     this.state = {
       pattern: this.props.pattern,
-      shownPattern: this.props.pattern,
+      shownPattern: this.props.pattern.map(
+        cell => (cell[0] === "blank" ? 0 : cell[0] === "marker" ? 2 : 1)
+      ),
       markerIndex: 0,
       intervalID: null,
       playing: false
@@ -64,15 +67,11 @@ class Sequencer extends Component {
   componentWillReceiveProps(newProps) {
     this.setState({
       pattern: newProps.pattern,
-      shownPattern: newProps.pattern
+      shownPattern: newProps.pattern.map(
+        cell => (cell[0] === "blank" ? 0 : cell[0] === "marker" ? 2 : 1)
+      )
     });
 
-    if (this.props.id.toString() === "000") {
-      console.log("newProps.playing");
-      console.log(newProps.playing);
-      console.log(newProps.counters);
-      console.log(newProps.counterMachine.state.counting);
-    }
     /*
       the kickstarter: the first track to kick off the setinterval
       the starter: any track starting that isn't the kickstarter
@@ -81,8 +80,6 @@ class Sequencer extends Component {
       the last pauser
     */
     if (typeof newProps.counters === "undefined") {
-      console.log("newProps");
-      console.log(newProps);
     } else if (
       newProps.counters[this.props.id] === -1 &&
       newProps.playing === false
@@ -161,14 +158,34 @@ class Sequencer extends Component {
       this.props.counterMachine.pauseAll();
   }
   increment(marker) {
-    this.setState((prevState, props) => {
-      return {
-        shownPattern: prevState.pattern.map(
-          (beat, i) => (i == marker ? 2 : beat)
-        ),
-        markerIndex: marker
-      };
-    });
+    this.setState(
+      (prevState, props) => {
+        return {
+          shownPattern: prevState.shownPattern.map(
+            (beat, i) => (i == marker ? 2 : beat)
+          ),
+          markerIndex: marker
+        };
+      },
+      () => {
+        console.log("sequencers output state");
+        if (marker >= 0) {
+          let newNotes = this.state.pattern[marker];
+          let outputNotes = this.output.state.currentNotes;
+          let notesToRelease = outputNotes.filter(
+            note => ![...newNotes].includes(note)
+          );
+          if (notesToRelease.length > 0) {
+            this.output.releaseNotes(
+              notesToRelease.filter(note => note !== "blank")
+            );
+          }
+          if (newNotes[0] !== "blank") {
+            this.output.playNotes(newNotes);
+          }
+        }
+      }
+    );
   }
   render() {
     return (
@@ -184,6 +201,7 @@ class Sequencer extends Component {
             });
           })
         )}
+        <Output onRef={ref => (this.output = ref)} />
       </div>
     );
   }
