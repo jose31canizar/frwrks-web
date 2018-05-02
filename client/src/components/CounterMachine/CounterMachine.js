@@ -92,7 +92,7 @@ class CounterMachine extends Component {
     let intervalID = window.setInterval(() => {
       this.metronome.tick();
       this.props.dispatch(playSequencers(this.state.ids));
-    }, 100);
+    }, 145);
     //save the interval id to the counterMachine state
     this.setState({ intervalID });
   }

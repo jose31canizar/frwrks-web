@@ -56,18 +56,16 @@ const instruments = {
       release: 0.1
     }
   },
-  Kick: {
+  "Kick Drum": {
     oscillator: {
-      type: "sine2",
-      modulationType: "sine2",
-      modulationIndex: 1,
-      harmonicity: 1.4
+      type: "sine"
     },
     envelope: {
-      attack: 0.0,
-      decay: 0.2,
-      sustain: 1.0,
-      release: 0.05
+      attack: 0.001,
+      decay: 0.4,
+      sustain: 0.01,
+      release: 1.4,
+      attackCurve: "exponential"
     }
   }
 };

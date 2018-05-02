@@ -6,7 +6,8 @@ const defaultState = {
   //not whether a specific track is playing or not
   selectedTrack: {
     name: "Track 1",
-    pattern: [...new Array(32)].map(x => ["blank"])
+    pattern: [...new Array(32)].map(x => ["blank"]),
+    sound: "Wavy Synth"
   },
   selectedEnsembleName: "Ensemble 1",
   ensembles: [
