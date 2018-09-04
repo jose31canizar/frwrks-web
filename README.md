@@ -8,16 +8,14 @@ yarn install
 ```
 
 ## MAC, Linux
-brew install yarn
-yarn install
-yarn start
+```
+yarn install && yarn start
+```
 
 ## Server
-yarn install
-npm run start
+```
+yarn install && yarn start
+```
 
 ## Dependencies
 Yarn
-npm (nodejs environment)
-Brew
-(Package.json lists out the dependencies for both the client and the backend)
